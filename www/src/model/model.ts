@@ -1,8 +1,7 @@
-import { Credentials } from "./credentials"
+import { User } from "./user"
 
 export interface Model {
-    credentials: Credentials
-
     /** the json web token */
-    token: string
+    token?: string
+    user: User
 }

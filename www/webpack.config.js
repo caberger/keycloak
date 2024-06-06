@@ -1,6 +1,7 @@
 // Generated using webpack-cli https://github.com/webpack/webpack-cli
 
 const path = require('path')
+const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
@@ -17,6 +18,7 @@ const config = {
     devServer: {
         open: true,
         host: 'localhost',
+        port: 4200
     },
     plugins: [
         new HtmlWebpackPlugin({
@@ -51,12 +53,26 @@ const config = {
     },
 }
 
-module.exports = () => {
+module.exports = env => {
+    const authUrl = env["auth-url"]
+    const realm = env["realm"]
+    const clientId = env["client-id"]
+    const authSettings = {
+        url: authUrl,
+        realm,
+        clientId
+    }
+    const definePlugin = new webpack.DefinePlugin({
+        AUTHENTICATION_SETTINGS: JSON.stringify(authSettings),
+        AUTH_URL: JSON.stringify(authUrl)
+    })
     if (isProduction) {
         config.mode = 'production'
         //config.plugins.push(new MiniCssExtractPlugin())
     } else {
         config.mode = 'development'
     }
+    config.plugins.push(definePlugin)
+    console.log(`building in ${config.mode} mode with authentication settings`, authSettings)
     return config
 }
