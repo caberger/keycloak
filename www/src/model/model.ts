@@ -5,3 +5,6 @@ export interface Model {
     token?: string
     user: User
 }
+export function isLoggedIn(model: Model) {
+    return !!model.token
+}

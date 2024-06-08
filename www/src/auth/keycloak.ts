@@ -3,14 +3,12 @@ import { AUTHENTICATION_SETTINGS } from '../env'
 import { set } from "../model"
 
 const keycloak = new Keycloak(AUTHENTICATION_SETTINGS)    
-const refreshTimer = setTimeout(() => {
+const refreshTimer = setInterval(() => {
     if (keycloak.authenticated) {
         keycloak.updateToken();
-        console.log("token updated")
-    } else {
-        
+        console.log("token updated", keycloak.token)
     }
-}, 1000)
+}, 30000)
 
 /** check if the user is authenticated */
 async function checkIfUserIsAuthenticated() {
@@ -23,6 +21,7 @@ async function checkIfUserIsAuthenticated() {
 
         if (authenticated) {
             set(model => model.token = keycloak.token)
+            console.log("token is", keycloak.token)
             loadProfile()
         } else {
            set(model => delete model.token)
@@ -31,24 +30,6 @@ async function checkIfUserIsAuthenticated() {
         console.error('Failed to initialize adapter:', error)
     }
 }
-/*
-
-const TOKEN = "token"
-const REFRSH_TOKEN = "refreshToken"
-function save() {
-    debugger
-    if (keycloak.token) {
-        localStorage.setItem(TOKEN, keycloak.token)
-    } else {
-        localStorage.removeItem(REFRSH_TOKEN)
-    }
-    if (keycloak.refreshToken) {
-        localStorage.setItem(REFRSH_TOKEN, keycloak.refreshToken)
-    } else {
-        localStorage.removeItem(REFRSH_TOKEN)
-    }
-}
-*/
 async function loadProfile() {
     const profile = await keycloak.loadUserProfile()
     set(model => {

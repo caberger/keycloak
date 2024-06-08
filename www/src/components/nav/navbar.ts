@@ -1,6 +1,6 @@
 import { html, render } from "lit-html"
 import { login, logout } from "../../auth/keycloak"
-import { Model, model } from "../../model"
+import { Model, isLoggedIn, model } from "../../model"
 
 class NavBarElement extends HTMLElement {
     connectedCallback() {
@@ -14,13 +14,21 @@ class NavBarElement extends HTMLElement {
 customElements.define("nav-bar", NavBarElement, {extends: "nav"})
 
 function template(model: Model) {
-    const icon = model.token ? "logout" : "person"
+    let title, icon
+    if (isLoggedIn(model)) {
+        title = "Logout"
+        icon = "logout"
+    } else {
+        title = "Login"
+        icon = "person"
+
+    }
     return html`
         <ul>
             <li><strong>HTL-Leonding</strong></li>
         </ul>
         <ul>
-            <li><a href="#" title="Account"><span class="material-icons" @click=${() => onClick(model)}>${icon}</span></a></li>
+            <li><a href="#" title=${title}><span class="material-icons" @click=${() => onClick(model)}>${icon}</span></a></li>
         </ul>
     `
 }
