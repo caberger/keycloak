@@ -8,7 +8,6 @@ RUN ls -l /usr/local/src/ && \
     cd
 
 FROM rust:slim
-#COPY ./.env /
 RUN apt update && apt install -y postgresql-client && apt clean
 COPY --from=builder /usr/local/src/target/release/backend /backend
 CMD [ "/backend" ]

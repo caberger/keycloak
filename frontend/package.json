@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:dev": "webpack --mode=development",
     "build": "webpack --mode=production --node-env=production --env auth-url='https://auth.htl-leonding.ac.at' --env realm=htl-leonding --env client-id=aberger-tutorial-frontend",
-    "start": "webpack serve --env auth-url='https://auth.htl-leonding.ac.at' --env realm=htl-leonding --env client-id=aberger-tutorial-frontend"
+    "start": "webpack serve --env auth-url='http://localhost:8000' --env realm=demo --env client-id=frontend"
   },
   "keywords": [],
   "author": "",

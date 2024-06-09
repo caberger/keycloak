@@ -1,5 +1,5 @@
 import { html, render } from "lit-html"
-import { Model, model } from "../../model"
+import { Model, isLoggedIn, model } from "../../model"
 import { distinctUntilChanged } from "rxjs"
 
 class ContentComponent extends HTMLElement {
@@ -12,22 +12,39 @@ class ContentComponent extends HTMLElement {
         render(template(model), this)
     }
 }
+customElements.define("main-content", ContentComponent, {extends: "article"})
 
 function template(model: Model) {
     console.log("model is", model)
+    const user = model.user
 
     const all = html`
-        <div>Welcome to the Demo. For more information please log in</div>
+        <h2>Welcome to the Demo</h2>
+        <p>For more information please log in</p>
     `   
     const loggedIn = html`
-        <div>Welcome ${model.user.email}. Please log out again.</div>
+        <h2>Welcome ${user.firstName} ${user.lastName}</h2>
+        <p>${user.email} - Please log out again.</p>
     `
-    const isLoggedIn = model.token?.length > 0
-    const template = isLoggedIn ? loggedIn : all
+    const isUserLoggedIn = isLoggedIn(model)
+    const template = isUserLoggedIn ? loggedIn : all
+    const rolesTmpl = isUserLoggedIn ? rolesTemplate(user.roles) : ""
     return html`
-        <div class="centered">
+        <hgroup>
             ${template}
-        </div>
+        </hgroup>
+        ${rolesTmpl}
         `
 }
-customElements.define("main-content", ContentComponent, {extends: "article"})
+function rolesTemplate(roles: string[]) {
+    const roleTemplates = roles.map(role => html`<div>${role}</div>`)
+    return html`
+        <hr/>
+        <div class="container-fluid">
+            <h3>Roles</h3>
+            <div class="grid">
+                ${roleTemplates}
+            </div>
+        </div>
+    `
+}
