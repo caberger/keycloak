@@ -1,0 +1,26 @@
+FROM rust as builder
+
+#ENV TARGET x86_64-unknown-linux-musl
+RUN rustup target add x86_64-unknown-linux-musl
+#RUN apk --update add musl-dev postgresql-client postgresql postgresql-dev
+RUN apt update && apt install -y musl-dev curl build-essential g++ python3 pkg-config icu-devtools libicu-dev libicu72 libreadline-dev zlib1g-dev bison libpq-dev flex
+
+RUN mkdir -p /usr/local/src/backend
+RUN \
+    cd /usr/local/src/ && \
+        #curl -L https://github.com/postgres/postgres/archive/refs/tags/REL_16_3.tar.gz -o postgres.tgz && \
+        #tar -xzf postgres.tgz && mv postgres-R* postgres && \
+    cd
+        #curl -L https://github.com/unicode-org/icu/releases/download/release-75-1/icu4c-75_1-src.tgz -o icu.tgz && \
+        #tar -xzf icu.tgz && \
+        #cd icu/source && ./configure --enable-static --enable-shared=false --prefix="" && make && make install && cd ../.. && \
+
+RUN cd /usr/local/src/postgres && \
+        #./configure --enable-static=yes --enable-shared=false --prefix="" && make install && \
+    cd
+COPY ./ usr/local/src/backend
+RUN \
+    cd /usr/local/src/backend && \
+        #RUSTFLAGS='-C target-feature=+crt-static -C link-self-contained=yes' cargo build --release --target x86_64-unknown-linux-musl && \
+    cd
+CMD [ "tail", "-f", "/dev/null" ]
