@@ -1,0 +1,5 @@
+
+FROM scratch
+COPY --from=builder /usr/local/src/backend/target/x86_64-unknown-linux-musl/release/backend /backend
+COPY --from=builder /lib/ld-musl-x86_64.so.1 /lib
+CMD [ "/backend" ]
