@@ -3,14 +3,16 @@
 set -eux
 docker ps
 pushd ./backend
-    docker build -t backend .
+    docker build --tag builder --file Dockerfile.builder
+    docker build --tag backend .
 popd
 pushd ./frontend
     npm install
     npm run build
 popd
-pushd compose
+pushd ./compose
     pushd keycloak
         docker build -t keycloak .
     popd
 popd
+
