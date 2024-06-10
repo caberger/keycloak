@@ -35,11 +35,11 @@ services:
     ports:
       - 8000:8080
     healthcheck:
-      test: curl --fail --head -fsS http://localhost:8080/health || exit 1
+      test: timeout 10s bash -c ':> /dev/tcp/localhost/8080'
       interval: 40s
       timeout: 30s
       retries: 3
-      start_period: 60s
+      start_period: 30s
     environment:
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=password
@@ -53,11 +53,21 @@ services:
       - 8080:8080
     environment:
       - DATABASE_URL=postgres://demo:demo@postgres/demo
+  nginx:
+    container_name: www
+    image: www
+    ports:
+      - 4200:80
     healthcheck:
-      test: curl --fail --head -fsS http://localhost:8080/hello || exit 1
+      test: curl --fail --head -fsS http://localhost || exit 1
       interval: 40s
       timeout: 30s
-      retries: 3
-      start_period: 60s
+      retries: 2
+      start_period: 20s
+    depends_on:
+      keycloak:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
 volumes:
   postgres:

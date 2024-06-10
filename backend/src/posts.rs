@@ -4,7 +4,7 @@ use crate::{constants::APPLICATION_JSON, models::Post, schema, };
 use schema::posts::dsl::*;
 use diesel::prelude::*;
 
-#[get("/posts")]
+#[get("/api/posts")]
 pub async fn get() -> HttpResponse {
     let connection = &mut establish_connection();
     let results = posts

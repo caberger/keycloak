@@ -15,3 +15,5 @@ RUN \
         tar -xzf postgres.tgz && mv postgres-R* postgres && \
         cd postgres && ./configure --prefix=/usr/local && make install && cd .. && \
     cd
+
+#CMD [ "tail", "-f", "/dev/null"]
