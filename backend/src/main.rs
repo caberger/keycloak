@@ -1,21 +1,27 @@
 use std::{env, io, process};
 use port_scanner::scan_port;
-
+use dotenvy::dotenv;
 use actix_web::{middleware, App, HttpServer};
+use pubkey::load_key;
+use actix_web_middleware_keycloak_auth::{DecodingKey, KeycloakAuth};
+
 
 mod hello;
 mod constants;
 mod posts;
 mod models;
 mod schema;
+mod pubkey;
 
 async fn serve() -> io::Result<()> {
     env::set_var("RUST_LOG", "actix_web=debug,actix_server=info");
     env_logger::init();
-
-    HttpServer::new(|| {
+    let pub_key = load_key();
+    HttpServer::new(move || {
+        let auth = KeycloakAuth::default_with_pk(DecodingKey::from_rsa_pem(pub_key.as_bytes()).unwrap());
         App::new()
             .wrap(middleware::Logger::default()) // enable logger - always register actix-web Logger middleware last
+            .wrap(auth)
             .service(hello::get) // register HTTP requests handlers
             .service(posts::get)
     })
@@ -26,6 +32,7 @@ async fn serve() -> io::Result<()> {
 #[actix_rt::main]
 async fn main() -> io::Result<()> {
     let args: Vec<String> = env::args().collect();
+    dotenv().ok();
 
     if args.len() > 1  {
         let option = &args[1];

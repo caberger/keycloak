@@ -4,7 +4,7 @@ set -eux
 docker ps
 
 pushd ./compose
-    ./clean-docker.sh || echo "noting to clean"
+#    ./clean-docker.sh || echo "noting to clean"
     docker compose -f postgres-compose.yaml pull
     docker compose -f postgres-compose.yaml up --build --detach
     while ! docker compose -f postgres-compose.yaml exec postgres pg_isready --dbname=demo --username=demo;

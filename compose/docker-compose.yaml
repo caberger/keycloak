@@ -63,7 +63,7 @@ services:
       interval: 40s
       timeout: 30s
       retries: 2
-      start_period: 20s
+      start_period: 10s
     depends_on:
       keycloak:
         condition: service_healthy

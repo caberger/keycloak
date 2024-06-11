@@ -1,6 +1,5 @@
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
-//use actix_web::web::Path;
 use actix_web::{get, HttpResponse};
 use crate::constants::APPLICATION_JSON;
 

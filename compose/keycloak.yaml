@@ -1,0 +1,29 @@
+include:
+  - postgres.yaml
+services:
+  keycloak:
+    container_name: keycloak
+    image: keycloak
+    command: ["start-dev",
+      "--db=postgres",
+      "--db-url=jdbc:postgresql://postgres:5432/keycloak",
+      "--db-username=keycloak",
+      "--db-password=keycloak",
+      "--http-enabled=true",
+      "--health-enabled=true",
+      "--metrics-enabled=true"
+      ]
+    depends_on:
+      postgres:
+          condition: service_healthy
+    ports:
+      - 8000:8080
+    healthcheck:
+      test: timeout 10s bash -c ':> /dev/tcp/localhost/8080'
+      interval: 40s
+      timeout: 30s
+      retries: 3
+      start_period: 30s
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=password

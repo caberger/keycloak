@@ -1,3 +1,6 @@
 Cargo.lock
 .DS_Store
 schema.rs
+s
+debug/
+target/
