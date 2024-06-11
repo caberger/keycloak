@@ -1,5 +1,6 @@
 FROM alpine
 
+RUN apk update
 RUN apk add curl musl-dev postgresql-dev icu-data-full
 RUN apk add zlib-dev bison flex readline-dev make perl linux-headers gcc g++ icu-dev
 

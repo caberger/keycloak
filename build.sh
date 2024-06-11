@@ -5,21 +5,21 @@ docker ps
 
 pushd ./compose
 #    ./clean-docker.sh || echo "noting to clean"
-    docker compose -f postgres-compose.yaml pull
-    docker compose -f postgres-compose.yaml up --build --detach
-    while ! docker compose -f postgres-compose.yaml exec postgres pg_isready --dbname=demo --username=demo;
+    docker compose -f postgres.yaml pull
+    docker compose -f postgres.yaml up --build --detach
+    while ! docker compose -f postgres.yaml exec postgres psql --dbname=demo --username=demo -c "select 'yes' as database_available";
     do   
-      echo "wait for dataabase to be ready ..."
+      echo "wait for database to be ready ..."
       sleep 1
     done
-    echo "database is available"
+    echo "database is available, try to create tables and generate file schema.rs..."
 popd
 pushd ./backend
     echo "create schema and create schema.rs..."
     diesel migration run # create tables and schema
 popd
 pushd ./compose
-    docker compose -f postgres-compose.yaml stop
+    docker compose -f postgres.yaml stop
 popd
 pushd ./backend
     docker build -f Dockerfile.builder --tag builder .
