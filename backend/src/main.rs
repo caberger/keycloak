@@ -29,6 +29,7 @@ async fn serve() -> io::Result<()> {
     .run()
     .await
 }
+
 #[actix_rt::main]
 async fn main() -> io::Result<()> {
     let args: Vec<String> = env::args().collect();
@@ -54,7 +55,6 @@ async fn main() -> io::Result<()> {
         }
         process::exit(retcode)
     }
-    serve()
-    .await
 
+    serve().await
 }

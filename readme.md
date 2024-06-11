@@ -1,6 +1,6 @@
 # Authentication and Authorization in a Web-App using keycloak
 
-This example shows how to secure a simple Web-Application using a REST - API protected with [Json Web Token](https://jwt.io/)s
+This example shows how to secure a simple Web-Application using a REST - API protected with [Json Web Tokens](https://jwt.io/)
 
 
 ## Frontend
@@ -38,7 +38,7 @@ docker compose up --build
 The service - startup procedure can be seen with ```watch docker compose ps```.
 The services have health checks included, so dependent services only start when the services they need are healthy.
 
-## adding users to keycloak
+## Adding users to keycloak
 
 to create the demo realm import the file ./components/keycloak/setup/realm-export.json in the keycloak admin panel. You can find the keycloak username and password in the docker-compose.yaml file.
 
