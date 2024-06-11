@@ -1,5 +1,5 @@
 import { html, render } from "lit-html"
-import { login, logout } from "../../auth/keycloak"
+import { login, logout } from "../../auth"
 import { Model, isLoggedIn, model } from "../../model"
 
 class NavBarElement extends HTMLElement {

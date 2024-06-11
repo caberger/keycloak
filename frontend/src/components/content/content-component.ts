@@ -1,6 +1,7 @@
 import { html, render } from "lit-html"
 import { Model, isLoggedIn, model } from "../../model"
 import { distinctUntilChanged } from "rxjs"
+import { Hello } from "../../feature/hello"
 
 class ContentComponent extends HTMLElement {
     connectedCallback() {
@@ -29,11 +30,13 @@ function template(model: Model) {
     const isUserLoggedIn = isLoggedIn(model)
     const template = isUserLoggedIn ? loggedIn : all
     const rolesTmpl = isUserLoggedIn ? rolesTemplate(user.roles) : ""
+    const greetingTmpl = isUserLoggedIn ? greetingTemplate(model.hello) : ""
     return html`
         <hgroup>
             ${template}
         </hgroup>
         ${rolesTmpl}
+        ${greetingTmpl}
         `
 }
 function rolesTemplate(roles: string[]) {
@@ -46,5 +49,17 @@ function rolesTemplate(roles: string[]) {
                 ${roleTemplates}
             </div>
         </div>
+    `
+}
+function greetingTemplate(greeting: Hello) {
+    const date = new Date(greeting.created_at)
+    return html`
+    <hr/>
+    <div class="container-fluid">
+        <h3>Greeting</h3>
+        <p>
+            ${greeting.greeting} at ${date.toLocaleDateString()}
+        </p>
+    </div>
     `
 }

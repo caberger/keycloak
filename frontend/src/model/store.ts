@@ -10,6 +10,10 @@ const initialState: Model = {
         lastName: "",
         username: "",
         roles: []
+    },
+    hello: {
+        greeting: "",
+        created_at: undefined
     }
 }
 

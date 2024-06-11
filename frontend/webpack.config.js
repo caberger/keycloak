@@ -18,7 +18,21 @@ const config = {
     devServer: {
         open: true,
         host: 'localhost',
-        port: 4200
+        port: 4200,
+        historyApiFallback: {
+            index: "/index.html",
+            verbose: true
+        },
+        proxy: [
+            {
+                context: ["/api"],
+                target: "http://localhost:8080",
+                changeOrigin: true,
+                logLevel: 'debug',
+                secure: false,
+                ws: true
+            }
+        ]
     },
     plugins: [
         new HtmlWebpackPlugin({
