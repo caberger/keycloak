@@ -44,7 +44,7 @@ to start the system change to the compose folder and run the following:
 cd compose
 ./start.sh
 ```
-The service - startup procedure can be seen with ```watch docker compose ps```.
+wThe service - startup procedure can be seen with ```watch docker compose ps```.
 The services have health checks included, so dependent services only start when the services they need are healthy. Wait until all four services are healthy.
 
 ## Adding users to keycloak
@@ -64,7 +64,7 @@ docker compose exec postgres -- pg_dump -U demo
 docker compose exec postgres -- pg_dump -U keycloak
 ```
 
-## Development using a local docker compose database
+## Development using a local docker compose database and keycloak image
 
 For development it is necessary to build and run the docker images, see Building above
 
@@ -74,6 +74,12 @@ To start the development containers use the following command:
 cd ./compose
 docker compose -f dev.yaml up --build
 ```
+
+In a 2nd terminal run the following: 
+```bash
+watch docker compose ps
+```
+...and wait until the keycloak service is healthy. Then import the [setup file](./compose/keycloak/setup/realm-export.json) into keycloak.  
 
 Then you can start the application server with:
 ```bash
