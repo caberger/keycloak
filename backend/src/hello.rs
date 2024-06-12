@@ -17,7 +17,7 @@ impl Hello {
         }
     }
 }
-#[get("/api/hello")]
+#[get("/hello")]
 pub async fn get() -> HttpResponse {
     let response = Hello::new();
 

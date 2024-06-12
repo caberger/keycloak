@@ -8,7 +8,7 @@ export async function loadHello() {
         Authorization: `Bearer ${token()}`,
         Accept: "application/json"
     }
-    const response = await fetch("./api/hello", {headers})
+    const response = await fetch("./public/hello", {headers})
     if (response.ok) {
         const greeting: Hello = await response.json()
         console.log("greeting loaded:", greeting)

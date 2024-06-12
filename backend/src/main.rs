@@ -1,7 +1,7 @@
 use std::{env, io, process};
 use port_scanner::scan_port;
 use dotenvy::dotenv;
-use actix_web::{middleware, App, HttpServer};
+use actix_web::{middleware, web, App, HttpServer};
 use pubkey::load_key;
 use actix_web_middleware_keycloak_auth::{DecodingKey, KeycloakAuth};
 
@@ -23,9 +23,13 @@ async fn serve() -> io::Result<()> {
         let auth = KeycloakAuth::default_with_pk(DecodingKey::from_rsa_pem(pub_key.as_bytes()).unwrap());
         App::new()
             .wrap(middleware::Logger::default()) // enable logger - always register actix-web Logger middleware last
-            .wrap(auth)
-            .service(hello::get) // register HTTP requests handlers
-            .service(posts::get)
+            .service(web::scope("/public")
+                .service(hello::get)
+            )
+            .service(web::scope("/api")
+                .service(posts::get)   
+                .wrap(auth)
+            )
     })
     .bind(bind_addr)?
     .run()

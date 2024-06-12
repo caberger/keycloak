@@ -25,7 +25,7 @@ const config = {
         },
         proxy: [
             {
-                context: ["/api"],
+                context: ["/api", "/public"],
                 target: "http://localhost:8080",
                 changeOrigin: true,
                 logLevel: 'debug',
