@@ -1,48 +1,9 @@
+# Note: Currently, by using the current https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json VSCode reports an error for the include in this file.
+# Still, it works with latest docker compose. You can rename this file then the error disappears.
+include:
+  - keycloak.yaml
+
 services:
-  postgres:
-    container_name: postgres
-    image: postgres:16-alpine
-    ports:
-      - 5432:5432
-    volumes:
-      - postgres:/var/lib/postgresql/data
-      - ./postgres/initdb.sql:/docker-entrypoint-initdb.d/initdb.sql
-    environment:
-      - POSTGRES_PASSWORD=demo
-      - POSTGRES_USER=demo
-      - POSTGRES_DB=demo
-    healthcheck:
-          test: pg_isready --dbname=keycloak --username=keycloak
-          interval: 40s
-          timeout: 30s
-          retries: 3
-          start_period: 10s
-  keycloak:
-    container_name: keycloak
-    image: keycloak
-    command: ["start-dev",
-      "--db=postgres",
-      "--db-url=jdbc:postgresql://postgres:5432/keycloak",
-      "--db-username=keycloak",
-      "--db-password=keycloak",
-      "--http-enabled=true",
-      "--health-enabled=true",
-      "--metrics-enabled=true"
-      ]
-    depends_on:
-      postgres:
-          condition: service_healthy
-    ports:
-      - 8000:8080
-    healthcheck:
-      test: timeout 10s bash -c ':> /dev/tcp/localhost/8080'
-      interval: 40s
-      timeout: 30s
-      retries: 3
-      start_period: 30s
-    environment:
-      - KEYCLOAK_ADMIN=admin
-      - KEYCLOAK_ADMIN_PASSWORD=password
   backend:
     container_name: backend
     image: backend

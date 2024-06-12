@@ -1,21 +1,4 @@
-# Development using a local docker compose database
+# Running the application
 
-## Starting
-
-```bash
-./start.sh
-```
-
-## delete all docker containers, images and volumes
-
-```bash
-./clean-docker.sh
-```
-
-
-## backup the database
-
-```bash
-docker exec -it postgres pg_dump -U demo
-```
-
+There are two compose files. You run all images using the [docker-compose.yaml](./docker-compose.yaml) file.
+For development you run 
