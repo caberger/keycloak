@@ -9,5 +9,5 @@ pub fn load_key() ->  String {
     println!("public key is:\n{}", pub_key);
     //let keycloak_auth = KeycloakAuth::default_with_pk(DecodingKey::from_rsa_pem(pub_key.as_bytes()).unwrap());
     //return keycloak_auth;
-    return pub_key.clone();
+    return pub_key;
 }

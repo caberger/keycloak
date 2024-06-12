@@ -5,6 +5,7 @@ use actix_web::{middleware, App, HttpServer};
 use pubkey::load_key;
 use actix_web_middleware_keycloak_auth::{DecodingKey, KeycloakAuth};
 
+const PORT: i32 = 8080;
 
 mod hello;
 mod constants;
@@ -16,6 +17,7 @@ mod pubkey;
 async fn serve() -> io::Result<()> {
     env::set_var("RUST_LOG", "actix_web=debug,actix_server=info");
     env_logger::init();
+    let bind_addr = std::format!("0.0.0.0:{}", PORT);
     let pub_key = load_key();
     HttpServer::new(move || {
         let auth = KeycloakAuth::default_with_pk(DecodingKey::from_rsa_pem(pub_key.as_bytes()).unwrap());
@@ -25,11 +27,10 @@ async fn serve() -> io::Result<()> {
             .service(hello::get) // register HTTP requests handlers
             .service(posts::get)
     })
-    .bind("0.0.0.0:8080")?
+    .bind(bind_addr)?
     .run()
     .await
 }
-
 #[actix_rt::main]
 async fn main() -> io::Result<()> {
     let args: Vec<String> = env::args().collect();

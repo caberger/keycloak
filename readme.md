@@ -68,11 +68,10 @@ docker compose exec postgres -- pg_dump -U keycloak
 
 For development it is necessary to build and run the docker images, see Building above
 
-
 To start the development containers use the following command:
 ```bash
 cd ./compose
-docker compose -f dev.yaml up --build
+./dev.sh
 ```
 
 In a 2nd terminal run the following: 
