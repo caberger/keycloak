@@ -34,6 +34,11 @@ To build the docker images run the following:
 ```bash
 ./build.sh
 ```
+
+if you want to build the rust backend also run the following:
+```bash
+RUST=yes ./build.sh
+```
 This should start a docker compose postgres postgres database, wait until it is available, 
 generate the ORM schema.rs mapping file and create the database tables and then start the builds of our docker images.
 

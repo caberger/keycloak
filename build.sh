@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+BUILD_RUST=${RUST:-NO}
 set -eux
 docker ps
 
@@ -25,14 +26,17 @@ pushd ./compose
     done
     echo "database is available, try to create tables and generate file schema.rs..."
 popd
-pushd ./backend
-    echo "create schema and create schema.rs..."
-    diesel migration run # create tables and schema
-popd
+if [[ "$BUILD_RUST." == "yes" ]]
+then
+    pushd ./backend
+        echo "create schema and create schema.rs..."
+        diesel migration run # create tables and schema
+    popd
+    pushd ./backend
+        docker build -f Dockerfile.builder --tag builder .
+        docker build --tag backend .
+    popd
+fi
 pushd ./compose
     docker compose -f postgres.yaml stop
-popd
-pushd ./backend
-    docker build -f Dockerfile.builder --tag builder .
-    docker build --tag backend .
 popd
