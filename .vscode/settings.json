@@ -2,5 +2,8 @@
     "vs-kubernetes": {
         "disable-linters": ["resource-limits"]
      
+    },
+    "yaml.schemas": {
+        "https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json": "file:///home/aberger/Documents/school/keycloak/compose/backup-keycloak.yaml"
     }
 }

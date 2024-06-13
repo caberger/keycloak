@@ -14,8 +14,8 @@ services:
       - POSTGRES_DB=demo
     healthcheck:
           test: pg_isready --dbname=keycloak --username=keycloak
-          interval: 10s
-          timeout: 30s
+          interval: 5s
+          timeout: 10s
           retries: 3
           start_period: 5s
 volumes:
