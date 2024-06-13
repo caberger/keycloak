@@ -11,7 +11,8 @@ services:
       "--db-password=keycloak",
       "--http-enabled=true",
       "--health-enabled=true",
-      "--metrics-enabled=true"
+      "--metrics-enabled=true",
+      "--import-realm"
       ]
     depends_on:
       postgres:

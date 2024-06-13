@@ -21,7 +21,7 @@ services:
   backup:
     container_name: backup
     image: ubuntu:latest
-    command: ["sleep", "3600"]
+    command: ["sleep", "1800"]
     volumes:
       - shared-tmpfs:/export
 volumes:

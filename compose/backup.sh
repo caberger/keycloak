@@ -6,5 +6,3 @@
 mkdir -p ./target
 docker compose exec postgres pg_dump --dbname=keycloak --username=keycloak | gzip > ./target/keycloak.sql.gz
 docker compose cp backup:/export ./target
-
-
