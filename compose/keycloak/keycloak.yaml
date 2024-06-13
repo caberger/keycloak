@@ -48,7 +48,7 @@ spec:
                 name: keycloak-credentials
                 key: username
           - name: KEYCLOAK_ADMIN_PASSWORD
-            value: admiot.4digipro
+            value: password
           - name: KC_DB
             value: postgres
           - name: KC_DB_USERNAME

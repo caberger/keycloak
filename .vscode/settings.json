@@ -1,5 +1,6 @@
 {
-    "yaml.schemas": {
-        "https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json": "file:///home/aberger/Documents/school/keycloak/compose/bugs/hello.yaml"
+    "vs-kubernetes": {
+        "disable-linters": ["resource-limits"]
+     
     }
 }
