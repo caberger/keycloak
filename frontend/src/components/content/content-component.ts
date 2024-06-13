@@ -58,7 +58,7 @@ function greetingTemplate(greeting: Hello) {
     <div class="container-fluid">
         <h3>Greeting</h3>
         <p>
-            ${greeting.greeting} at ${date.toLocaleDateString()}
+            ${greeting.greeting} at ${date.toLocaleString()}
         </p>
     </div>
     `
