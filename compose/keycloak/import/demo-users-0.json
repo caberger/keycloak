@@ -21,11 +21,8 @@
     "disableableCredentialTypes" : [ ],
     "requiredActions" : [ ],
     "realmRoles" : [ "default-roles-demo" ],
-    "clientRoles" : {
-      "frontend" : [ "customer", "admin" ]
-    },
     "notBefore" : 0,
-    "groups" : [ ]
+    "groups" : [ "/admins", "/customers" ]
   }, {
     "id" : "31227330-0b7f-4271-b72e-6dc0cd33987b",
     "username" : "john.doe",
@@ -49,5 +46,22 @@
     "realmRoles" : [ "default-roles-demo" ],
     "notBefore" : 0,
     "groups" : [ "/customers" ]
+  }, {
+    "id" : "0166ed0d-e1a6-4536-b359-401f3cb899cc",
+    "username" : "service-account-backend",
+    "emailVerified" : false,
+    "createdTimestamp" : 1718356607538,
+    "enabled" : true,
+    "totp" : false,
+    "serviceAccountClientId" : "backend",
+    "credentials" : [ ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-demo" ],
+    "clientRoles" : {
+      "backend" : [ "uma_protection" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
   } ]
 }

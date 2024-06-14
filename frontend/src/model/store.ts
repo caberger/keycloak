@@ -14,7 +14,8 @@ const initialState: Model = {
     hello: {
         greeting: "",
         created_at: undefined
-    }
+    },
+    posts: []
 }
 
 const store = new BehaviorSubject<Model>(initialState)

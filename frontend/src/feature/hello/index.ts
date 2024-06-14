@@ -1,2 +1,2 @@
 export { Hello } from "./hello"
-export { loadHello } from "./hello-service"
+export { loadHellos as loadHello } from "./hello-service"

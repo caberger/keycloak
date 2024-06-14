@@ -1,14 +1,10 @@
-import { token } from "../../auth"
+import { headers } from "../../auth"
 import { set } from "../../model"
 import { Hello } from "./hello"
 
 
-export async function loadHello() {
-    const headers = {
-        Authorization: `Bearer ${token()}`,
-        Accept: "application/json"
-    }
-    const response = await fetch("./public/hello", {headers})
+export async function loadHellos() {
+    const response = await fetch("./public/hello", {headers: headers()})
     if (response.ok) {
         const greeting: Hello = await response.json()
         console.log("greeting loaded:", greeting)

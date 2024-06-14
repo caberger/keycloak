@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
+#set -eux
 
-BUILD_RUST=${RUST:-NO}
-set -eux
+set -e
+
 docker ps
 
 pushd ./compose    
+    docker compose -f postgres.yaml pull
     pushd ./keycloak
         docker build --tag keycloak .
     popd
-    docker compose -f postgres.yaml pull
 popd
 pushd ./frontend
     npm install
@@ -16,27 +17,6 @@ pushd ./frontend
     docker build --tag www --file docker/Dockerfile .
 popd
 
-pushd ./compose
-#    ./clean-docker.sh || echo "noting to clean"
-    docker compose -f postgres.yaml up --build --detach
-    while ! docker compose -f postgres.yaml exec postgres psql --dbname=demo --username=demo -c "select 'yes' as database_available";
-    do   
-      echo "wait for database to be ready ..."
-      sleep 1
-    done
-    echo "database is available, try to create tables and generate file schema.rs..."
-popd
-if [[ "$BUILD_RUST." == "yes" ]]
-then
-    pushd ./backend
-        echo "create schema and create schema.rs..."
-        diesel migration run # create tables and schema
-    popd
-    pushd ./backend
-        docker build -f Dockerfile.builder --tag builder .
-        docker build --tag backend .
-    popd
-fi
-pushd ./compose
-    docker compose -f postgres.yaml stop
-popd
+echo "==="
+echo "= to build the rust backend please change to the backend folder and run the build.sh file in that folder"
+echo "==="

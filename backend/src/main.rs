@@ -19,6 +19,7 @@ async fn serve() -> io::Result<()> {
     env_logger::init();
     let bind_addr = std::format!("0.0.0.0:{}", PORT);
     let pub_key = load_key();
+
     HttpServer::new(move || {
         let auth = KeycloakAuth::default_with_pk(DecodingKey::from_rsa_pem(pub_key.as_bytes()).unwrap());
         App::new()
@@ -35,6 +36,7 @@ async fn serve() -> io::Result<()> {
     .run()
     .await
 }
+
 #[actix_rt::main]
 async fn main() -> io::Result<()> {
     let args: Vec<String> = env::args().collect();

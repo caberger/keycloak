@@ -2,6 +2,7 @@ import Keycloak, { KeycloakInitOptions } from 'keycloak-js'
 import { AUTHENTICATION_SETTINGS } from '../env'
 import { set } from "../model"
 import { loadHello } from '../feature/hello'
+import { loadAllPosts } from '../feature/post'
 
 const keycloak = new Keycloak(AUTHENTICATION_SETTINGS)    
 const refreshTimer = setInterval(() => {
@@ -24,7 +25,6 @@ async function checkIfUserIsAuthenticated() {
             set(model => model.token = keycloak.token)
             console.log("token is", keycloak.token)
             loadProfile()
-            loadHello()
         } else {
            set(model => delete model.token)
         }
