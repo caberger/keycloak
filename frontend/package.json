@@ -18,11 +18,10 @@
     "css-loader": "^7.1.2",
     "html-webpack-plugin": "^5.6.0",
     "mini-css-extract-plugin": "^2.9.0",
-    "prettier": "^3.2.5",
     "style-loader": "^4.0.0",
     "ts-loader": "^9.5.1",
     "typescript": "^5.4.5",
-    "webpack": "^5.91.0",
+    "webpack": "^5.92.0",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^5.0.4"
   },
@@ -30,7 +29,8 @@
     "@picocss/pico": "^2.0.6",
     "@webcomponents/custom-elements": "^1.6.0",
     "immer": "^10.1.1",
-    "keycloak-js": "^24.0.5",
+    "jose": "^5.4.0",
+    "keycloak-js": "^25.0.0",
     "lit-html": "^3.1.4",
     "rxjs": "^7.8.1"
   }

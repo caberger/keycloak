@@ -4,6 +4,7 @@ import { distinctUntilChanged } from "rxjs"
 import { Hello } from "../../feature/hello"
 import { AUTHENTICATION_SETTINGS } from "../../env"
 import { Post } from "../../feature/post"
+import { isUserInRole } from "../../auth"
 
 class ContentComponent extends HTMLElement {
     connectedCallback() {
@@ -27,16 +28,13 @@ function loggedOutTemplate() {
                 <table>
                     <thead>
                         <tr>
-                            <th>username</th><th>password</th>
+                            <th>Username</th><th>Password</th><th>Description</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>admin</td><td>password</td>
-                        </tr>
-                        <tr>
-                            <td>john.doe</td><td>password</td>
-                        </tr>
+                        <tr><td>admin</td><td>password</td><td>system adminstrator</td></tr>
+                        <tr><td>john.doe</td><td>password</td><td>customer allowed to read published posts</td></tr>
+                        <tr><td>joe</td><td>password</td><td>editor of posts</td></tr>
                     </tbody>
                 </table>
             </article>
@@ -61,7 +59,7 @@ function template(model: Model) {
     const rolesTmpl = isUserLoggedIn ? rolesTemplate(user.roles) : ""
     //const greetingTmpl = isUserLoggedIn ? greetingTemplate(model.hello) : ""
     const greetingTmpl = greetingTemplate(model.hello)
-    const postsTmpl = isUserLoggedIn ? postsTemplate(model.posts) : ""
+    const postsTmpl = isUserLoggedIn ? postsTemplate(model.posts, isUserInRole(model, "editor")) : ""
     return html`
         <hgroup>
             ${template}
@@ -95,7 +93,7 @@ function greetingTemplate(greeting: Hello) {
     </div>
     `
 }
-function postsTemplate(posts: Post[]) {
+function postsTemplate(posts: Post[], isEditor: boolean) {
     const postsTemplate = posts.map(post => {
         return html`
             <tr>
@@ -106,6 +104,7 @@ function postsTemplate(posts: Post[]) {
             </tr>
         `
     })
+    const text = isEditor ? "you see all posts, because you are an editor" : "you see the published posts, because you are logged in"
     return html`
     <style>
         .shorten {
@@ -115,7 +114,7 @@ function postsTemplate(posts: Post[]) {
     <div class="container-fluid">
         <hgroup>
             <h3>Published Posts</h3>
-            <div>(can only be seen when logged in)</div>
+            <div>(${text})</div>
         </hgroup>
         <table>
             <thead>

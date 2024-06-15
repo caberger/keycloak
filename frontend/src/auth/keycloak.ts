@@ -1,11 +1,8 @@
 import Keycloak, { KeycloakInitOptions } from 'keycloak-js'
 import { AUTHENTICATION_SETTINGS } from '../env'
 import { set } from "../model"
-import { loadHello } from '../feature/hello'
-import { loadAllPosts } from '../feature/post'
-
 const keycloak = new Keycloak(AUTHENTICATION_SETTINGS)    
-const refreshTimer = setInterval(() => {
+const _ = setInterval(() => {
     if (keycloak.authenticated) {
         keycloak.updateToken();
         console.log("token updated", keycloak.token)
