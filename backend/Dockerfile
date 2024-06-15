@@ -12,5 +12,5 @@ RUN \
 FROM scratch
 COPY --from=cargo-builder /usr/local/src/backend/target/x86_64-unknown-linux-musl/release/backend /backend
 COPY --from=cargo-builder /lib/ld-musl-x86_64.so.1 /lib
-HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 CMD [ "/backend", "--health" ]
+HEALTHCHECK --interval=60s --timeout=3s --start-period=5s --start-interval=1s --retries=3 CMD [ "/backend", "--health" ]
 CMD [ "/backend" ]
