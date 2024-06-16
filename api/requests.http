@@ -1,21 +1,34 @@
 @REALM={{$dotenv realm}}
 @KEYCLOAK_URL=http://localhost:8000
 @TOKEN_ENDPOINT={{wellknown.response.body.token_endpoint}}
+@ACCESS_TOKEN={{login.response.body.access_token}}
 @AUTHORIZATION_ENDPOINT={{wellknown.response.body.authorization_endpoint}}
 @ISSUER={{wellknown.response.body.issuer}}
 
 @JWKS_URI={{wellknown.response.body.jwks_uri}}
+@CLIENT_CERT={{$dotenv cert}}
+@BASE_URI=http://localhost:4200
 
 # @name wellknown
 GET {{KEYCLOAK_URL}}/realms/{{REALM}}/.well-known/openid-configuration
 ###
+# @name login
+POST {{TOKEN_ENDPOINT}}
+Content-Type: application/x-www-form-urlencoded
+
+client_secret={{CLIENT_CERT}}&client_id=m2m&username=john.doe&password=password&grant_type=password&redirect_uri=http%3A%2F%2Fwww.arge3d.at
+###
+
+# @name hello
+GET {{BASE_URI}}/public/hello
+###
+# @name published
+GET {{BASE_URI}}/api/posts/published
+Authorization: Bearer {{ACCESS_TOKEN}}
+###
 # @name issuer
 GET {{ISSUER}}
 Accept: application/json
-###
-
-# @name code
-GET {{AUTHORIZATION_ENDPOINT}}?response_type=code&client_id=frontend&state=initial&redirect_uri=http%3A%2F%2Flocalhost%3A4200
 ###
 
 # @name keys
