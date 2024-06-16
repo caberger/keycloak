@@ -3,7 +3,7 @@ use port_scanner::scan_port;
 use dotenvy::dotenv;
 use actix_web::{middleware, web, App, HttpServer};
 use pubkey::load_key;
-use actix_web_middleware_keycloak_auth::{AlwaysReturnPolicy, DecodingKey, KeycloakAuth, Role};
+use actix_web_middleware_keycloak_auth::{DecodingKey, KeycloakAuth};
 
 const PORT: i32 = 8080;
 
@@ -13,6 +13,7 @@ mod posts;
 mod models;
 mod schema;
 mod pubkey;
+mod claims;
 
 async fn serve() -> io::Result<()> {
     env::set_var("RUST_LOG", "actix_web=debug,actix_server=info");
@@ -22,25 +23,16 @@ async fn serve() -> io::Result<()> {
 
     HttpServer::new(move || {
         let auth = KeycloakAuth::default_with_pk(DecodingKey::from_rsa_pem(pub_key.as_bytes()).unwrap());
-        let keycloak_editor_auth = KeycloakAuth {
-            detailed_responses: true,
-            passthrough_policy: AlwaysReturnPolicy,
-            keycloak_oid_public_key: DecodingKey::from_rsa_pem(pub_key.as_bytes()).unwrap(),
-            required_roles: vec![
-                Role::Realm { role: "editor".to_owned() }, // The "admin" realm role must be provided in the JWT
-            ],
-        };
         App::new()
             .wrap(middleware::Logger::default()) // enable logger - always register actix-web Logger middleware last
             .service(web::scope("/public")
                 .service(hello::get)
             )
             .service(web::scope("/api")
-                .service(posts::get_published)   
-                .wrap(auth)
                 .service(posts::get)
-                .wrap(keycloak_editor_auth)
+                .wrap(auth)
             )
+            
     })
     .bind(bind_addr)?
     .run()

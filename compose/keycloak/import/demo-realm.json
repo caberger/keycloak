@@ -72,6 +72,14 @@
       "containerId" : "e1ee4f6a-c95e-4dbc-898a-85d546e802cc",
       "attributes" : { }
     }, {
+      "id" : "9bcc9947-b1ae-4559-8d56-58d538b28fae",
+      "name" : "editor",
+      "description" : "an editor is allowed to edit posts",
+      "composite" : false,
+      "clientRole" : false,
+      "containerId" : "e1ee4f6a-c95e-4dbc-898a-85d546e802cc",
+      "attributes" : { }
+    }, {
       "id" : "7851fe21-5a2b-48c0-86b1-3e7e3cf0120a",
       "name" : "uma_authorization",
       "description" : "${role_uma_authorization}",
@@ -365,22 +373,6 @@
         "clientRole" : true,
         "containerId" : "e9c6808c-5b99-49fd-8742-2cb1bc3a7ada",
         "attributes" : { }
-      }, {
-        "id" : "96e61e33-f8e4-42a6-a847-40d4defd6012",
-        "name" : "admin",
-        "description" : "Administrator",
-        "composite" : false,
-        "clientRole" : true,
-        "containerId" : "e9c6808c-5b99-49fd-8742-2cb1bc3a7ada",
-        "attributes" : { }
-      }, {
-        "id" : "6c3ebae9-481e-45c3-a632-66e480f5cd12",
-        "name" : "customer",
-        "description" : "",
-        "composite" : false,
-        "clientRole" : true,
-        "containerId" : "e9c6808c-5b99-49fd-8742-2cb1bc3a7ada",
-        "attributes" : { }
       } ]
     }
   },
@@ -391,9 +383,7 @@
     "subGroups" : [ ],
     "attributes" : { },
     "realmRoles" : [ "customer", "admin" ],
-    "clientRoles" : {
-      "frontend" : [ "admin", "customer" ]
-    }
+    "clientRoles" : { }
   }, {
     "id" : "da8f2507-99c1-4761-98d0-447fb6ec3ec7",
     "name" : "customers",
@@ -401,9 +391,15 @@
     "subGroups" : [ ],
     "attributes" : { },
     "realmRoles" : [ "customer" ],
-    "clientRoles" : {
-      "frontend" : [ "customer" ]
-    }
+    "clientRoles" : { }
+  }, {
+    "id" : "9d78ba07-e1d2-4497-8550-64012c81e783",
+    "name" : "editors",
+    "path" : "/editors",
+    "subGroups" : [ ],
+    "attributes" : { },
+    "realmRoles" : [ "customer", "editor" ],
+    "clientRoles" : { }
   } ],
   "defaultRole" : {
     "id" : "afb7bbc0-c647-40fe-a9db-f071e830604b",
