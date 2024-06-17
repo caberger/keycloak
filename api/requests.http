@@ -17,7 +17,7 @@ GET {{KEYCLOAK_URL}}/realms/{{REALM}}/.well-known/openid-configuration
 POST {{TOKEN_ENDPOINT}}
 Content-Type: application/x-www-form-urlencoded
 
-client_secret={{CLIENT_CERT}}&client_id=m2m&username=john.doe&password=password&grant_type=password&redirect_uri=http%3A%2F%2Fwww.arge3d.at
+client_secret={{CLIENT_CERT}}&client_id=frontend&username=john.doe&password=password&grant_type=password&redirect_uri=http%3A%2F%2Fwww.arge3d.at
 ###
 # @name loginasjoe
 POST {{TOKEN_ENDPOINT}}

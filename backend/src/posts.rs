@@ -18,20 +18,13 @@ fn load(published_only: bool) -> HttpResponse {
         .limit(50)
         .select(Post::as_select());
 
-    let all_results = stmt;
-    let filtered_results =
-        stmt
-        .filter(published.eq(published_only));
-    let results =
-        if published_only {
-            filtered_results.load(connection)
-        } else {
-            all_results.load(connection)
-        }
-        .expect("Error loading posts")
-    ;
+    let mut results = stmt.load(connection);
+    if published_only {
+        results = stmt.filter(published.eq(published_only)).load(connection);
+    }
+    let res = results.expect("Error loading posts");
     HttpResponse::Ok()
         .content_type(APPLICATION_JSON)
-        .json(results)
+        .json(res)
 }
 

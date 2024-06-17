@@ -1,4 +1,5 @@
 use std::{env, io, process};
+use backend::get_connection_pool;
 use port_scanner::scan_port;
 use dotenvy::dotenv;
 use actix_web::{middleware, web, App, HttpServer};
@@ -20,10 +21,12 @@ async fn serve() -> io::Result<()> {
     env_logger::init();
     let bind_addr = std::format!("0.0.0.0:{}", PORT);
     let pub_key = load_key();
+    let pool = get_connection_pool();
 
     HttpServer::new(move || {
         let auth = KeycloakAuth::default_with_pk(DecodingKey::from_rsa_pem(pub_key.as_bytes()).unwrap());
         App::new()
+            .app_data(pool.clone())
             .wrap(middleware::Logger::default()) // enable logger - always register actix-web Logger middleware last
             .service(web::scope("/public")
                 .service(hello::get)
