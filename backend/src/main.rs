@@ -15,6 +15,8 @@ mod models;
 mod schema;
 mod pubkey;
 mod claims;
+mod errors;
+mod db;
 
 async fn serve() -> io::Result<()> {
     env::set_var("RUST_LOG", "actix_web=debug,actix_server=info");
