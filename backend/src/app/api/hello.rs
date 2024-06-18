@@ -1,7 +1,8 @@
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use actix_web::{get, HttpResponse};
-use crate::constants::APPLICATION_JSON;
+
+use crate::app::api::constants::APPLICATION_JSON;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Hello {

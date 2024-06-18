@@ -5,11 +5,7 @@ import { Post } from "./post"
 
 export async function loadPosts(publishedOnly: boolean) {
 //    const published = publishedOnly ? "/published" : ""
-    const url = publishedOnly ? "./api/posts/published" : "./api/posts"
-    console.log("LoadLoades", publishedOnly, url)
-    load(url)
-}
-async function load(url: string) {
+    const url = "./api/posts"
     const response = await fetch(url, {headers: headers()})
     if (response.ok) {
         const posts: Post[] = await response.json()

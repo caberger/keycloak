@@ -4,7 +4,7 @@ use diesel::pg::PgConnection;
 use diesel::r2d2::{ConnectionManager, Pool, PooledConnection};
 use once_cell::sync::Lazy;
 
-use crate::errors::AppError;
+use crate::app::errors::AppError;
 
 pub type DbPool = Pool<ConnectionManager<PgConnection>>;
 pub type DbPooledConnection = PooledConnection<ConnectionManager<PgConnection>>;
@@ -19,7 +19,7 @@ pub static DB: Lazy<DbPool> = Lazy::new(|| {
         .build(manager)
         .expect("Failed to create database connection pool.")
 });
-
+/** get a pooled database connection */
 pub fn get_connection() -> Result<DbPooledConnection, AppError> {
     DB.get().map_err(|e| {
         AppError::new(500)

@@ -1,40 +1,34 @@
 use std::{env, io, process};
-use backend::get_connection_pool;
+use actix_web::{middleware, web, App, HttpServer};
+use actix_web_middleware_keycloak_auth::{DecodingKey, KeycloakAuth};
+
+use app::{api::{hello, postsapi}, pubkey::load_key};
+
+
 use port_scanner::scan_port;
 use dotenvy::dotenv;
-use actix_web::{middleware, web, App, HttpServer};
-use pubkey::load_key;
-use actix_web_middleware_keycloak_auth::{DecodingKey, KeycloakAuth};
 
 const PORT: i32 = 8080;
 
-mod hello;
-mod constants;
-mod posts;
+pub mod app;
 mod models;
 mod schema;
-mod pubkey;
-mod claims;
-mod errors;
-mod db;
 
 async fn serve() -> io::Result<()> {
     env::set_var("RUST_LOG", "actix_web=debug,actix_server=info");
     env_logger::init();
     let bind_addr = std::format!("0.0.0.0:{}", PORT);
     let pub_key = load_key();
-    let pool = get_connection_pool();
 
     HttpServer::new(move || {
         let auth = KeycloakAuth::default_with_pk(DecodingKey::from_rsa_pem(pub_key.as_bytes()).unwrap());
         App::new()
-            .app_data(pool.clone())
             .wrap(middleware::Logger::default()) // enable logger - always register actix-web Logger middleware last
             .service(web::scope("/public")
                 .service(hello::get)
             )
             .service(web::scope("/api")
-                .service(posts::get)
+                .service(postsapi::get)
                 .wrap(auth)
             )
             
