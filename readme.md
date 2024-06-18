@@ -1,6 +1,6 @@
-# Authentication and Authorization in a Web-App using keycloak
+# Securing a Web-App using Keycloak
 
-This example shows how to secure a simple Web-Application using a REST - API protected with [Json Web Tokens](https://jwt.io/)
+This example shows how to secure a simple Web-Application using a REST - API that is protected with [Json Web Tokens](https://jwt.io/) using [keycloak](https://www.keycloak.org/).
 
 
 ## Frontend
@@ -83,8 +83,11 @@ In a 2nd terminal run the following:
 ```bash
 watch docker compose ps
 ```
-...and wait until the keycloak service is healthy. Then import the [setup file](./compose/keycloak/setup/realm-export.json) into keycloak.  
-
+...and wait until the keycloak service is healthy.
+To create the database table run the following in the compose folder:
+```bash
+diesel migration run
+```
 Then you can start the application server with:
 ```bash
 cd ./backend
@@ -97,6 +100,3 @@ cd ./frontend
 npm install
 npm start
 ```
-
-
-
