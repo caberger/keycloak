@@ -9,6 +9,8 @@ use diesel::prelude::*;
 
 /** @return either all posts if user is an editor or published only.
  * Demonstrates 2 ways to get the roles and shows how to extract info from jwt.
+ * @param claims the claims extracted by our own struct
+ * @param roles the keycloak roles extracted by the middleware
  */
 #[get("/posts")]
 pub async fn get(claims: KeycloakClaims<ClaimsFromJwt>, roles: KeycloakRoles) -> HttpResponse {
