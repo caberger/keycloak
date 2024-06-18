@@ -2,9 +2,7 @@ import { headers } from "../../auth"
 import { set } from "../../model"
 import { Post } from "./post"
 
-
 export async function loadPosts(publishedOnly: boolean) {
-//    const published = publishedOnly ? "/published" : ""
     const url = "./api/posts"
     const response = await fetch(url, {headers: headers()})
     if (response.ok) {
