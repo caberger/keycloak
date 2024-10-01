@@ -16,12 +16,19 @@ spec:
     spec:
       containers:
       - name: keycloak
-        image: ghcr.io/yourorg/your-image:latest
+        image: ghcr.io/htl-leo-itp-2325-4-5bhitm/demo-keycloak:latest
         imagePullPolicy: Always
-        #command: ["/opt/keycloak/bin/kc.sh", "start-dev", "--proxy", "edge", "--features=declarative-user-profile", "--spi-x509cert-lookup-haproxy-trust-proxy-verification=true"]
-        # kubectl port-forward key... 8000:8080 for admin - ui
-        command: ["/opt/keycloak/bin/kc.sh", "start-dev", "--proxy", "edge", "--features=declarative-user-profile", "--spi-x509cert-lookup-haproxy-trust-proxy-verification=true", "--hostname-admin-url=http://localhost:8000", "--log-level=INFO" ]
-       
+        #command: ["/opt/keycloak/bin/kc.sh", "start-dev", "--proxy", "edge", "--features=declarative-user-profile", "--spi-x509cert-lookup-haproxy-trust-proxy-verification=true", "--hostname-admin-url=http://localhost:8000", "--log-level=INFO" ]
+        command: ["/opt/keycloak/bin/kc.sh"]
+        args:
+          - --db=postgres
+          - --db-url=jdbc:postgresql://postgres:5432/keycloak
+          - --db-username=keycloak
+          - --db-password=keycloak
+          - --http-enabled=true
+          - --health-enabled=true
+          - --metrics-enabled=true
+          - --import-realm
         ports:
         - containerPort: 8080
           name: http

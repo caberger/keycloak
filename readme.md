@@ -29,6 +29,15 @@ You the follwing build tools:
 - [cargo](https://doc.rust-lang.org/stable/cargo/index.html)
 - [diesel](https://diesel.rs/)
 
+```bash
+brew install postgresql
+brew install rust
+brew install rustup
+rustup default stable
+rustup target add x86_64-unknown-linux-musl
+cargo install diesel_cli --no-default-features --features "postgres"
+```
+
 
 To build the docker images run the following:
 ```bash

@@ -1,4 +1,4 @@
-FROM quay.io/keycloak/keycloak:latest as builder
+FROM --platform=linux/amd64 quay.io/keycloak/keycloak:latest AS builder
 
 # Enable health and metrics support
 ENV KC_HEALTH_ENABLED=true

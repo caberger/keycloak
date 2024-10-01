@@ -1,4 +1,4 @@
-FROM builder as cargo-builder
+FROM builder AS cargo-builder
 
 RUN mkdir -p /usr/local/src/backend
 COPY ./ /usr/local/src/backend
