@@ -21,6 +21,13 @@ spec:
         #command: ["/opt/keycloak/bin/kc.sh", "start-dev", "--proxy", "edge", "--features=declarative-user-profile", "--spi-x509cert-lookup-haproxy-trust-proxy-verification=true", "--hostname-admin-url=http://localhost:8000", "--log-level=INFO" ]
         command: ["/opt/keycloak/bin/kc.sh"]
         args:
+          - start-dev
+          - --proxy-headers
+          - xforwarded
+          - --hostname
+          - http://localhost:8000
+          - --hostname-admin=http://localhost:8000
+          - --log-level=INFO
           - --db=postgres
           - --db-url=jdbc:postgresql://postgres:5432/keycloak
           - --db-username=keycloak
@@ -33,12 +40,8 @@ spec:
         - containerPort: 8080
           name: http
         readinessProbe:
-          httpGet:
-            httpHeaders:
-              - name: Accept
-                value: application/json          
-            path: /health/ready
-            port: http
+          tcpSocket:
+            port: 8080
           initialDelaySeconds: 60
         livenessProbe:
           httpGet:
@@ -46,7 +49,7 @@ spec:
               - name: Accept
                 value: application/json          
             path: health/live
-            port: http
+            port: 8080
           initialDelaySeconds: 180
         env:
           - name: KEYCLOAK_ADMIN
@@ -95,3 +98,18 @@ spec:
             value: enabled
           - name: KC_HEALTH_ENABLED
             value: "true"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: keycloak
+  name: keycloak
+spec:
+  selector:
+    run: keycloak
+  ports:
+  - name: auth-port
+    port: 8080
+    protocol: TCP
+    targetPort: 8080

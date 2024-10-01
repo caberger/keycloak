@@ -8,7 +8,10 @@ docker ps
 pushd ./compose    
     docker compose -f postgres.yaml pull
     pushd ./keycloak
-        docker build --tag keycloak .
+        docker build --tag keycloak --platform linux/amd64 .
+        docker tag keycloak ghcr.io/htl-leo-itp-2325-4-5bhitm/demo-keycloak:latest
+        docker login ghcr.io
+        docker push ghcr.io/htl-leo-itp-2325-4-5bhitm/demo-keycloak:latest
     popd
 popd
 pushd ./frontend
