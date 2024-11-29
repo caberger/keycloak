@@ -1,5 +1,3 @@
-// Generated using webpack-cli https://github.com/webpack/webpack-cli
-
 const path = require('path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -25,8 +23,16 @@ const config = {
         },
         proxy: [
             {
-                context: ["/api", "/public"],
+                context: ["/api"],
                 target: "http://localhost:8080",
+                changeOrigin: true,
+                logLevel: 'debug',
+                secure: false,
+                ws: true
+            },
+            {
+                context: ["/auth"],
+                target: "http://localhost:8000",
                 changeOrigin: true,
                 logLevel: 'debug',
                 secure: false,
@@ -45,7 +51,7 @@ const config = {
     module: {
         rules: [
             {
-                test: /\.(ts|tsx)$/i,
+                test: /\.(ts)$/i,
                 loader: 'ts-loader',
                 exclude: ['/node_modules/'],
             },
@@ -57,14 +63,11 @@ const config = {
                 test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
                 type: 'asset',
             },
-
-            // Add your rules for custom modules here
-            // Learn more about loaders from https://webpack.js.org/loaders/
         ],
     },
     resolve: {
-        extensions: ['.tsx', '.ts', '.jsx', '.js', '...'],
-    },
+        extensions: ['.ts', '.js', '...'],
+    }
 }
 
 module.exports = env => {
@@ -82,7 +85,6 @@ module.exports = env => {
     })
     if (isProduction) {
         config.mode = 'production'
-        //config.plugins.push(new MiniCssExtractPlugin())
     } else {
         config.mode = 'development'
     }

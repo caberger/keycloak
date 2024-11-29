@@ -1,10 +1,22 @@
 {
     "version": "0.2.0",
-    "configurations": [{
-        "type": "chrome",
-        "request": "launch",
-        "name": "Frontend (Chrome)",
-        "url": "http://localhost:4200",
-        "webRoot": "${workspaceFolder}/www"
-    }]
+    "configurations": [
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Frontend (Chrome)",
+            "url": "http://localhost:4200",
+            "webRoot": "${workspaceFolder}/www"
+        },
+        {
+            "type": "java",
+            "name": "application-server",
+            "request": "launch",
+            "mainClass": "at.ac.htl.leonding.demo.Main",
+            "projectName": "backend",
+            "cwd": "${workspaceFolder}/application-server",
+            "vmArgs": [
+            ]
+        },        
+    ]
 }

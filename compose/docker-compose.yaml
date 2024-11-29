@@ -1,24 +1,7 @@
 # See https://github.com/compose-spec/compose-spec/issues/510
 # The syntax error below is reported due to a bug in the docker compose sepc.
 include:
+  - postgres.yaml
   - keycloak.yaml
 #  - backend.yaml
-services:
-  nginx:
-    container_name: www
-    image: www
-    ports:
-      - 4200:80
-    healthcheck:
-      test: curl --fail --head -fsS http://localhost || exit 1
-      interval: 40s
-      timeout: 30s
-      retries: 2
-      start_period: 10s
-    depends_on:
-      keycloak:
-        condition: service_healthy
-      backend:
-        condition: service_healthy
-volumes:
-  postgres:
+#  - frontend.yaml

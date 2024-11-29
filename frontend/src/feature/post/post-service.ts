@@ -1,6 +1,7 @@
 import { headers } from "../../auth"
 import { set } from "../../model"
 import { Post } from "./post"
+console.log("posts loaded")
 
 export async function loadPosts(publishedOnly: boolean) {
     const url = "./api/posts"

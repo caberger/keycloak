@@ -1,5 +1,10 @@
 # Docker compose images for local development
 
+## starting
+```bash
+docker compose up --build
+```
+
 ## postgres
 
 We use postgres for our demo- and the keycloak- database.

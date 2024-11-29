@@ -24,7 +24,7 @@ async fn serve() -> io::Result<()> {
         let auth = KeycloakAuth::default_with_pk(DecodingKey::from_rsa_pem(pub_key.as_bytes()).unwrap());
         App::new()
             .wrap(middleware::Logger::default()) // enable logger - always register actix-web Logger middleware last
-            .service(web::scope("/public")
+            .service(web::scope("/api")
                 .service(hello::get)
             )
             .service(web::scope("/api")

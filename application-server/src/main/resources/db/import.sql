@@ -1,4 +1,5 @@
-INSERT INTO public.tb_user (name) VALUES('Max Mustermann');
-INSERT INTO public.tb_user (name) VALUES('Joe Sixpack');
-INSERT INTO public.tb_user (name) VALUES('Jane Roe');
-INSERT INTO public.tb_user (name) VALUES('John Doe');
+INSERT INTO tb_post (title, body, published) VALUES
+    ('my fist post', 'this is my first post', false),
+    ('2nd Post', 'a first yet another short post :)', true),
+    ('3nd Post', 'and yet another published post :)', true)
+;

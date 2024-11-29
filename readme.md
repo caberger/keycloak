@@ -11,6 +11,10 @@ The frontend uses lit-html to show a simple main page that displays user details
 
 The backend is a simple ORM Rest - Api implemented in rust
 
+## Application server
+
+application-server is a quarkus REST - Service
+
 ## Authentication and Authorization server
 
 The keycloak server implements the user database and returns Json Web Tokens on successfull authentication. As a backend a postgresql database is used.
@@ -28,6 +32,7 @@ You the follwing build tools:
 - [nodejs](https://nodejs.org/)
 - [cargo](https://doc.rust-lang.org/stable/cargo/index.html)
 - [diesel](https://diesel.rs/)
+- java
 
 ```bash
 brew install postgresql

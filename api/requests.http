@@ -27,7 +27,7 @@ client_secret={{CLIENT_CERT}}&client_id=m2m&username=joe&password=password&grant
 ###
 
 # @name hello
-GET {{BASE_URI}}/public/hello
+GET {{BASE_URI}}/api/hello
 ###
 ### posts as john ###
 GET {{BASE_URI}}/api/posts
