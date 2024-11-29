@@ -10,13 +10,10 @@ import jakarta.ws.rs.Path;
 public class PostResource {
     @Inject PostRepository postRepository;
     @Inject PostMapper mapper;
-    //@Inject JsonWebToken jwt;
     
     @GET
     @PermitAll
     public List<Post> all() {
-        //var claims = jwt.getClaimNames().stream().collect(Collectors.joining(","));
-        //Log.infof("claims: %s", claims);
         return postRepository.listAll().stream().map(mapper::toResource).toList();
     }
 }
