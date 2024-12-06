@@ -12,8 +12,6 @@ import { loadPosts } from "./feature/post"
 
 checkIfUserIsAuthenticated()
 
-loadHello()
-
 model
     .pipe(
         filter(isLoggedIn),
@@ -22,6 +20,7 @@ model
     )
     .subscribe(model => {
         const isEditor = !isUserInRole(model, "editor")
+        loadHello()
         loadPosts(isEditor)
     })
 

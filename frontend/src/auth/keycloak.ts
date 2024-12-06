@@ -1,6 +1,7 @@
 import Keycloak, { KeycloakInitOptions } from 'keycloak-js'
 import { AUTHENTICATION_SETTINGS } from '../env'
 import { set } from "../model"
+
 const keycloak = new Keycloak(AUTHENTICATION_SETTINGS)    
 const _ = setInterval(() => {
     if (keycloak.authenticated) {
