@@ -1,9 +1,9 @@
-const path = require('path')
-const webpack = require('webpack')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-const CopyPlugin = require("copy-webpack-plugin");
+const path = require("path")
+const webpack = require("webpack")
+const HtmlWebpackPlugin = require("html-webpack-plugin")
+const MiniCssExtractPlugin = require("mini-css-extract-plugin")
+const { CleanWebpackPlugin } = require("clean-webpack-plugin")
+const CopyWebpackPlugin = require("copy-webpack-plugin")
 
 const isProduction = process.env.NODE_ENV == 'production'
 const stylesHandler = isProduction ? MiniCssExtractPlugin.loader : 'style-loader'
@@ -48,11 +48,11 @@ const config = {
         }),
         new MiniCssExtractPlugin(),
         new CleanWebpackPlugin(),
-        new CopyPlugin({
+        new CopyWebpackPlugin({
             patterns: [
-              { from: "node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js", to: "js/webcomponents-bundle.js" }
+              { from: "images", to: "images" },
             ]
-        })
+          })       
     ],
     module: {
         rules: [

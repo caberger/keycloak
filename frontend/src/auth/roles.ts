@@ -15,7 +15,6 @@ export function isUserInRole(model: Model, role: Role) {
         const realmAccess: RealmAccess = payload["realm_access"] as any
         const foundRole = realmAccess.roles.find(r => r == role)
         isInRole = !!foundRole
-        console.log(`isInRole(${role}) = ${isInRole}`, payload)
     }
     return isInRole
 }

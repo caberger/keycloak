@@ -2,7 +2,7 @@ import { html, render } from "lit-html"
 import { login, logout } from "../../auth"
 import { Model, isLoggedIn, model } from "../../model"
 
-class NavBarElement extends HTMLElement {
+class LoginButtonElement extends HTMLElement {
     connectedCallback() {
         model.subscribe(model => this.render(model))
     }
@@ -11,7 +11,7 @@ class NavBarElement extends HTMLElement {
     }
 }
 
-customElements.define("nav-bar", NavBarElement, {extends: "nav"})
+customElements.define("login-button", LoginButtonElement)
 
 function template(model: Model) {
     let title, icon
@@ -23,20 +23,15 @@ function template(model: Model) {
         icon = "person"
 
     }
+    function onClick(model: Model) {
+        if (!!model.token) {
+            logout()
+        } else {
+            login()
+        }
+    }
     return html`
-        <ul>
-            <li><strong>HTL-Leonding</strong></li>
-        </ul>
-        <ul>
-            <li><a href="#" title=${title}><span class="material-icons" @click=${() => onClick(model)}>${icon}</span></a></li>
-        </ul>
+        <a href="#" title=${title}><span class="material-icons" @click=${() => onClick(model)}>${icon}</span></a>
+
     `
 }
-function onClick(model: Model) {
-    if (!!model.token) {
-        logout()
-    } else {
-        login()
-    }
-}
-

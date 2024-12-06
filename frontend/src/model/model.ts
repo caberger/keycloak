@@ -7,7 +7,7 @@ export interface Model {
     token?: string
     
     user: User,
-    hello: Hello,
+    hello?: Hello,
     posts: Post[]
 }
 export function isLoggedIn(model: Model) {

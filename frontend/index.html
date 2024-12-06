@@ -6,18 +6,21 @@
     <title>Keycloak Demo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="A minimalist example for a login with keycloak">
+    <link rel="icon" type="image/x-icon" href="./images/favicon.png">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!--
-    <script src="./js/webcomponents-bundle.js">
-        // ... because it seems Apple is hellbent in being the IE6/7 of this generation.
-        // see https://forums.developer.apple.com/forums/thread/731945
-    </script>
-    -->
 </head>
 <body>
     <main class="container">
-        <nav is="nav-bar"></nav>
-        <div class="container-fluid" is="main-content">
-        </div>
+        <nav>
+            <ul>
+                <li><strong>HTL-Leonding</strong></li>
+            </ul>
+            <ul>
+                <li id="login"><login-button></login-button></li>
+            </ul>            
+        </nav>
+        <main class="container-fluid">
+            <app-component></app-component>
+        </main>
     </main>
 </html>

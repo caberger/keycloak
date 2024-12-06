@@ -11,10 +11,6 @@ const initialState: Model = {
         username: "",
         roles: []
     },
-    hello: {
-        greeting: "",
-        created_at: undefined
-    },
     posts: []
 }
 

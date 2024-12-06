@@ -1,16 +1,16 @@
 import "@picocss/pico"
 import "./css/styles.css"
-import '@webcomponents/custom-elements'
-import "./components/nav/navbar"
+import "./components/nav/login-button"
 import "./components/content/content-component"
 import { checkIfUserIsAuthenticated, isUserInRole } from "./auth"
 import { model } from "./model/store"
-import { distinctUntilChanged, filter, map } from "rxjs"
+import { distinctUntilChanged, filter} from "rxjs"
 import { loadHello } from "./feature/hello"
 import { isLoggedIn } from "./model"
 import { loadPosts } from "./feature/post"
 
 checkIfUserIsAuthenticated()
+loadHello()
 
 model
     .pipe(
@@ -20,7 +20,6 @@ model
     )
     .subscribe(model => {
         const isEditor = !isUserInRole(model, "editor")
-        loadHello()
         loadPosts(isEditor)
     })
 

@@ -1,10 +1,10 @@
 import { html, render } from "lit-html"
 import { Model, isLoggedIn, model } from "../../model"
 import { distinctUntilChanged } from "rxjs"
-import { Hello } from "../../feature/hello"
 import { AUTHENTICATION_SETTINGS } from "../../env"
 import { Post } from "../../feature/post"
 import { isUserInRole } from "../../auth"
+import { Hello } from "../../feature/hello"
 
 class ContentComponent extends HTMLElement {
     connectedCallback() {
@@ -16,7 +16,7 @@ class ContentComponent extends HTMLElement {
         render(template(model), this)
     }
 }
-customElements.define("main-content", ContentComponent, {extends: "article"})
+customElements.define("app-component", ContentComponent)
 
 function loggedOutTemplate() {
     return html`
@@ -46,7 +46,6 @@ function loggedOutTemplate() {
 `
 }
 function template(model: Model) {
-    console.log("model is", model)
     const user = model.user
 
     const all = loggedOutTemplate()
@@ -57,12 +56,14 @@ function template(model: Model) {
     const isUserLoggedIn = isLoggedIn(model)
     const template = isUserLoggedIn ? loggedIn : all
     const rolesTmpl = isUserLoggedIn ? rolesTemplate(user.roles) : ""
+    const greetingTmpl = greetingTemplate(model.hello)
     const postsTmpl = isUserLoggedIn ? postsTemplate(model.posts, isUserInRole(model, "editor")) : ""
     return html`
         <hgroup>
             ${template}
         </hgroup>
         ${rolesTmpl}
+        ${greetingTmpl}
         ${postsTmpl}
         `
 }
@@ -77,6 +78,17 @@ function rolesTemplate(roles: string[]) {
             </div>
         </div>
     `
+}
+function greetingTemplate(greeting?: Hello) {
+    return greeting ? html`
+    <hr/>
+    <div class="container-fluid">
+        <h3>Greeting</h3>
+        <p>
+            ${greeting.greeting} at ${new Date(greeting.created_at).toLocaleString()}
+        </p>
+    </div>
+    ` : html``
 }
 function postsTemplate(posts: Post[], isEditor: boolean) {
     const postsTemplate = posts.map(post => {
