@@ -6,17 +6,60 @@ import java.util.stream.Collectors;
 
 import org.eclipse.microprofile.jwt.Claim;
 import org.eclipse.microprofile.jwt.ClaimValue;
-import io.quarkus.logging.Log;
+
+import at.ac.htl.leonding.demo.Mapper;
+import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.annotation.security.PermitAll;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.json.JsonString;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
+
+@Entity
+class TbPost {
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    Long id;
+
+    String title;
+    String body;
+    boolean published;
+}
+
+@ApplicationScoped
+class PostRepository implements PanacheRepository<TbPost> {}
+
+@ApplicationScoped
+class PostMapper implements Mapper<TbPost, Post> {
+    public Post toResource(TbPost post) {
+        return new Post(
+            post.id,
+            post.title,
+            post.body,
+            post.published);
+    }
+    public TbPost fromResource(Post p) {
+        var post = new TbPost();
+
+        post.id = p.id();
+        post.title = p.title();
+        post.body = p.body();
+        post.published = p.published();
+        
+        return post;
+    }
+}
 
 @Path("/posts")
 public class PostResource {
     @Inject PostRepository postRepository;
-    @Inject PostMapper mapper;
+    @Inject Mapper<TbPost, Post> mapper;
+
     @Claim("realm_access")
     ClaimValue<Map<String, List<JsonString>>> realmAccess;
 
@@ -27,17 +70,17 @@ public class PostResource {
             .listAll()
             .stream()
             .map(mapper::toResource)
-            .filter(this::am_I_allowedToSeeThis)
+            .filter(this::amIallowedToSeeThis)
             .toList();
     }
-    boolean am_I_allowedToSeeThis(Post post) {
+    boolean amIallowedToSeeThis(Post post) {
         var roles = realmAccess
             .getValue()
             .get("roles")
             .stream()
             .map(s -> s.getString())
             .collect(Collectors.toSet());
-        Log.infof("roles: %s", roles);
+
         return post.published() || roles.contains("editor");
     }
 }
