@@ -9,6 +9,7 @@ import org.eclipse.microprofile.jwt.ClaimValue;
 
 import at.ac.htl.leonding.demo.Mapper;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
+import io.quarkus.logging.Log;
 import jakarta.annotation.security.PermitAll;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -79,6 +80,7 @@ public class PostResource {
             .get("roles")
             .stream()
             .map(s -> s.getString())
+            .peek(role -> Log.infof("role: %s", role))
             .collect(Collectors.toSet());
 
         return post.published() || roles.contains("editor");
