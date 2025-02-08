@@ -1,3 +1,5 @@
 package-lock.json
 node_modules
-config.json
+
+# my personal rest script with my passwords. See readme.md
+test*.sh

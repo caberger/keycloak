@@ -3,13 +3,17 @@ import { Wellknown } from "./wellknown"
 import { OidcTokens } from "./oidc"
 
 async function login(wellknown: Wellknown, configuration: Configuration) {
+    const creds = configuration.credentials
     const params = new URLSearchParams()
-    params.set("client_secret", configuration.credentials.clientSecret)
+    if (configuration.credentials.clientSecret) {
+        params.set("client_secret", creds.clientSecret)
+    }
     params.set("client_id", configuration.authServer.clientId)
-    params.set("username", configuration.credentials.username)
-    params.set("password", configuration.credentials.password)
+    params.set("username", creds.username)
+    params.set("password", creds.password)
     params.set("grant_type", "password")
     params.set("redirect_uri", "https://localhost:4200")
+
     const response = await fetch(wellknown.token_endpoint, {
         method: "POST",
         headers: {
@@ -18,7 +22,17 @@ async function login(wellknown: Wellknown, configuration: Configuration) {
         },
         body: params
     })
-    const tokens = await response.json() as OidcTokens
+    let tokens
+    if (!response.ok) {
+        console.warn(`login failed with status ${response.status}. Reason: ${response.statusText}`)
+        console.log("response is", response)
+        if (response.headers.get("content-type") == "application/json") {
+            const json = await response.json()
+            console.log("response body:", json)
+        }
+    } else {
+        tokens = await response.json() as OidcTokens
+    }
     return tokens
 }
 

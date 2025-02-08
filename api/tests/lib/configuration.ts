@@ -35,13 +35,13 @@ function loadConfiguration() {
             type: "string"
         },
         "client-secret": {
-            type: "string"
+            type: "string",
+            default: ""
         }
     } as const
 
     const {
-        values,
-        positionals,
+        values
     } = parseArgs({ args, options })
     const username = values.username
     const password = values.password
@@ -60,7 +60,6 @@ function loadConfiguration() {
         missing = "auth-url"
     }
     if (!clientSecret) {
-        missing = "client-secret"
     }
     if (!realm) {
         missing = "realm"
@@ -71,7 +70,7 @@ function loadConfiguration() {
     if (missing) {
         console.error(
             `you must call test test like this:
-                npm test -- --username <username> --password <password> --auth-url <https://...keycloak> --realm <your realm> --client-secret <client-secret>
+                npm test -- --username <username> --password <password> --auth-url <https://...keycloak> --realm <your realm> --client-id <Client ID> [--client-secret <client-secret>]
             `)
         console.log("your values", values)
         console.error(`parameter "${missing}" missing`)
