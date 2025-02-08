@@ -4,4 +4,4 @@ export { it, describe, beforeEach, afterEach, after, before } from "node:test"
 import assert from "node:assert"
 
 export {assert} 
-export { KeycloakErrorResponse, Wellknown, OidcTokens, PermissionEntry } from "./keycloak"
+export { KeycloakErrorResponse, Wellknown, OidcTokens } from "./keycloak"
