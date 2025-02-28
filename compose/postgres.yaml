@@ -42,7 +42,8 @@ services:
             DROP USER if exists demo;
             CREATE USER demo WITH PASSWORD 'demo' LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT NOREPLICATION CONNECTION LIMIT -1;
             CREATE DATABASE demo WITH OWNER=demo ENCODING='UTF8' CONNECTION LIMIT=-1;
-          EOF
+          EOF;
+          exit;
 volumes:
   postgres:
   setup:

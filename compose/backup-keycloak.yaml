@@ -14,20 +14,8 @@ services:
       "--users=same_file"
       ]
     volumes:
-      - shared-tmpfs:/export
+      - ./target/export:/export
     depends_on:
       postgres:
           condition: service_healthy
-  backup:
-    container_name: backup
-    image: ubuntu:latest
-    command: ["sleep", "1800"]
-    volumes:
-      - shared-tmpfs:/export
-volumes:
-  shared-tmpfs:
-    driver: local
-    driver_opts:
-      type: "tmpfs"
-      device: "tmpfs"
-      o: "size=256m,uid=1000"
+
