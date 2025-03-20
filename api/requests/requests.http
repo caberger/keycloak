@@ -1,0 +1,29 @@
+@REALM=demo
+@KEYCLOAK_URL=http://localhost:8000
+@BASE=http://localhost:8080/api
+
+# @name wellknown
+GET {{KEYCLOAK_URL}}/realms/{{REALM}}/.well-known/openid-configuration
+
+{{
+    $global.token_endpoint=response.parsedBody.token_endpoint;
+}}
+###
+# @name loginasjohn
+POST {{$global.token_endpoint}}
+Content-Type: application/x-www-form-urlencoded
+
+client_id=frontend&username=john.doe&password=password&grant_type=password&redirect_uri=http%3A%2F%2Fwww.arge3d.at
+
+{{
+    $global.access_token=response.parsedBody.access_token;
+}}
+###
+
+# @name hello
+GET http://localhost:8080/api/hello
+
+###
+# name posts
+GET {{BASE}}/posts
+Authorization: Bearer {{$global.access_token}}
