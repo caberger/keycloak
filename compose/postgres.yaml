@@ -33,15 +33,15 @@ services:
             - -c
             - |
                 cat <<EOF > /srv/data/initdb.sql
-                DROP DATABASE if exists keycloak;
-                DROP USER if exists keycloak;
-                CREATE USER keycloak WITH PASSWORD 'keycloak' LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT NOREPLICATION CONNECTION LIMIT -1;
-                CREATE DATABASE keycloak WITH OWNER=keycloak ENCODING='UTF8' CONNECTION LIMIT=-1;
-                DROP DATABASE if exists demo;
-                DROP USER if exists demo;
-                CREATE USER demo WITH PASSWORD 'demo' LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT NOREPLICATION CONNECTION LIMIT -1;
-                CREATE DATABASE demo WITH OWNER=demo ENCODING='UTF8' CONNECTION LIMIT=-1;
-                EOF;
+                    DROP DATABASE if exists keycloak;
+                    DROP USER if exists keycloak;
+                    CREATE USER keycloak WITH PASSWORD 'keycloak' LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT NOREPLICATION CONNECTION LIMIT -1;
+                    CREATE DATABASE keycloak WITH OWNER=keycloak ENCODING='UTF8' CONNECTION LIMIT=-1;
+                    DROP DATABASE if exists demo;
+                    DROP USER if exists demo;
+                    CREATE USER demo WITH PASSWORD 'demo' LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT NOREPLICATION CONNECTION LIMIT -1;
+                    CREATE DATABASE demo WITH OWNER=demo ENCODING='UTF8' CONNECTION LIMIT=-1;
+                EOF
 volumes:
     postgres:
     setup:
