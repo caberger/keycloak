@@ -9,8 +9,8 @@
 */
 
 import { produce, WritableDraft } from 'immer'
-import { } from "./model"
 import { BehaviorSubject } from 'rxjs'
+import { Post } from '../feature'
 
 /* 1. single source of truth */
 const store = new BehaviorSubject<Model>({
@@ -19,12 +19,6 @@ const store = new BehaviorSubject<Model>({
 })
 
 /* 2. State is read-only */
-interface Post {
-    readonly id: number,
-    readonly title: string,
-    readonly body: string
-    readonly published: boolean
-}
 
 interface Model {
     readonly posts: Post[],

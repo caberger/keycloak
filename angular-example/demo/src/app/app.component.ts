@@ -1,13 +1,7 @@
 import { Component } from '@angular/core'
-import { store, set, Post } from "../model"
-import { checkIfUserIsAuthenticated, login, logout, headers } from '../auth'
-
-const loadAllPosts = async () => {
-    const response = await fetch("/api/posts", { headers: headers() })
-    const posts = await response.json()
-    console.log("posts loaded", posts)
-    set(model => { model.posts = posts })
-}
+import { store } from "../model"
+import { checkIfUserIsAuthenticated, login, logout } from '../auth'
+import { loadAllPosts, Post } from '../feature'
 
 @Component({
     selector: 'app-root',
@@ -22,14 +16,18 @@ export class AppComponent {
             this.title = model.title
             this.posts = model.posts
         })
-        const isLoggedIn = await checkIfUserIsAuthenticated()
-        if (!isLoggedIn) {
-            login()
-        } else {
-            loadAllPosts()
-        }
+        onLoad()
     }
     onLogout() {
         logout()
+    }
+}
+
+async function onLoad() {
+    const isLoggedIn = await checkIfUserIsAuthenticated()
+    if (!isLoggedIn) {
+        login()
+    } else {
+        loadAllPosts()
     }
 }
