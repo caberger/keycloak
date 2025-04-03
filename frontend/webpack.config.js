@@ -50,9 +50,9 @@ const config = {
         new CleanWebpackPlugin(),
         new CopyWebpackPlugin({
             patterns: [
-              { from: "images", to: "images" },
+                { from: "images", to: "images" },
             ]
-          })       
+        })
     ],
     module: {
         rules: [
@@ -63,7 +63,7 @@ const config = {
             },
             {
                 test: /\.css$/i,
-                use: [stylesHandler,'css-loader'],
+                use: [stylesHandler, 'css-loader'],
             },
             {
                 test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,

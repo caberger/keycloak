@@ -11,6 +11,7 @@ import at.ac.htl.leonding.demo.Mapper;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import io.quarkus.logging.Log;
 import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.json.JsonString;
@@ -24,7 +25,7 @@ import jakarta.ws.rs.Path;
 @Entity
 class TbPost {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     String title;
@@ -33,17 +34,19 @@ class TbPost {
 }
 
 @ApplicationScoped
-class PostRepository implements PanacheRepository<TbPost> {}
+class PostRepository implements PanacheRepository<TbPost> {
+}
 
 @ApplicationScoped
 class PostMapper implements Mapper<TbPost, Post> {
     public Post toResource(TbPost post) {
         return new Post(
-            post.id,
-            post.title,
-            post.body,
-            post.published);
+                post.id,
+                post.title,
+                post.body,
+                post.published);
     }
+
     public TbPost fromResource(Post p) {
         var post = new TbPost();
 
@@ -51,38 +54,53 @@ class PostMapper implements Mapper<TbPost, Post> {
         post.title = p.title();
         post.body = p.body();
         post.published = p.published();
-        
+
         return post;
     }
 }
 
 @Path("/posts")
 public class PostResource {
-    @Inject PostRepository postRepository;
-    @Inject Mapper<TbPost, Post> mapper;
+    @Inject
+    PostRepository postRepository;
+    @Inject
+    Mapper<TbPost, Post> mapper;
 
     @Claim("realm_access")
     ClaimValue<Map<String, List<JsonString>>> realmAccess;
 
     @GET
+    @Path("/my")
     @PermitAll
-    public List<Post> all() {
+    public List<Post> onlyMyPosts() {
         return postRepository
-            .listAll()
-            .stream()
-            .map(mapper::toResource)
-            .filter(this::amIallowedToSeeThis)
-            .toList();
+                .listAll()
+                .stream()
+                .map(mapper::toResource)
+                .filter(this::amIallowedToSeeThis)
+                .toList();
     }
+
     boolean amIallowedToSeeThis(Post post) {
         var roles = realmAccess
-            .getValue()
-            .get("roles")
-            .stream()
-            .map(s -> s.getString())
-            .peek(role -> Log.infof("role: %s", role))
-            .collect(Collectors.toSet());
+                .getValue()
+                .get("roles")
+                .stream()
+                .map(s -> s.getString())
+                .peek(role -> Log.infof("role: %s", role))
+                .collect(Collectors.toSet());
 
         return post.published() || roles.contains("editor");
+    }
+
+    @GET
+    @RolesAllowed("editor")
+    public List<Post> all() {
+        return postRepository
+                .listAll()
+                .stream()
+                .map(mapper::toResource)
+                .toList();
+
     }
 }
