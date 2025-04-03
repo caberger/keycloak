@@ -1,16 +1,19 @@
-import { Component, OnInit } from '@angular/core'
-import { RouterOutlet } from '@angular/router'
+import { Component } from '@angular/core'
 import { store, set, Post } from "../model"
 import { checkIfUserIsAuthenticated, login, logout, headers } from '../auth'
 
-const POSTS_URL = "/api/posts"
+const loadAllPosts = async () => {
+    const response = await fetch("/api/posts", { headers: headers() })
+    const posts = await response.json()
+    console.log("posts loaded", posts)
+    set(model => { model.posts = posts })
+}
+
 @Component({
     selector: 'app-root',
-    imports: [RouterOutlet],
-    templateUrl: './app.component.html',
-    styleUrl: './app.component.css'
+    templateUrl: './app.component.html'
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
     title?: string
     posts: Post[] = []
 
@@ -23,10 +26,7 @@ export class AppComponent implements OnInit {
         if (!isLoggedIn) {
             login()
         } else {
-            const response = await fetch(POSTS_URL, { headers: headers() })
-            const posts = await response.json()
-            console.log("posts loaded", posts)
-            set(model => model.posts = posts)
+            loadAllPosts()
         }
     }
     onLogout() {

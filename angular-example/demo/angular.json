@@ -22,9 +22,13 @@
                             {
                                 "glob": "**/*",
                                 "input": "public"
+                            },
+                            {
+                                "output": "styles",
+                                "glob": "pico.classless.css",
+                                "input": "node_modules/@picocss/pico/css"
                             }
                         ],
-                        "styles": ["src/styles.css"],
                         "scripts": []
                     },
                     "configurations": {
@@ -80,7 +84,6 @@
                                 "input": "public"
                             }
                         ],
-                        "styles": ["src/styles.css"],
                         "scripts": []
                     }
                 }

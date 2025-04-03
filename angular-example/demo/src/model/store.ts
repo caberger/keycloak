@@ -34,9 +34,7 @@ interface Model {
 
 /** 3. Changes are made with pure functions */
 function set(recipe: (draft: WritableDraft<Model>) => void) {
-    const currentState = store.getValue()
-    const nextValue = produce(currentState, recipe)
-    store.next(nextValue)
+    store.next(produce(store.getValue(), recipe))
 }
 
 export { store, set }
