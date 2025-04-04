@@ -1,8 +1,8 @@
-import Keycloak, { KeycloakInitOptions } from 'keycloak-js'
-import { AUTHENTICATION_SETTINGS } from '../env'
+import Keycloak, { KeycloakInitOptions } from "keycloak-js"
+import { AUTHENTICATION_SETTINGS } from "../env"
 import { set } from "../model"
 
-const keycloak = new Keycloak(AUTHENTICATION_SETTINGS)    
+const keycloak = new Keycloak(AUTHENTICATION_SETTINGS)
 const _ = setInterval(() => {
     if (keycloak.authenticated) {
         keycloak.updateToken();
@@ -24,7 +24,7 @@ async function checkIfUserIsAuthenticated() {
             console.log("token is", keycloak.token)
             loadProfile()
         } else {
-           set(model => delete model.token)
+            set(model => delete model.token)
         }
     } catch (error) {
         console.error('Failed to initialize adapter:', error)
@@ -34,7 +34,7 @@ async function loadProfile() {
     const profile = await keycloak.loadUserProfile()
     set(model => {
         model.token = keycloak.token
-        model.user.firstName = profile.firstName 
+        model.user.firstName = profile.firstName
         model.user.lastName = profile.lastName
         model.user.email = profile.email
         model.user.id = profile.id
