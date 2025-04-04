@@ -1,15 +1,3 @@
-# 🚀 Welcome to your new awesome project!
+# Two frontends using keycloak
 
-This project has been created using **webpack-cli**, you can now run
-
-```
-npm run build
-```
-
-or
-
-```
-yarn build
-```
-
-to bundle your application
+For full functionality and few dependencies see the [frontend](./frontend/readme.md) subfolder here. The [angular-example](./angular-example/readme.md) demonstrates how to use keycloak with an older havier framework.
