@@ -16,14 +16,14 @@ export class AppComponent {
             this.title = model.title
             this.posts = model.posts
         })
-        onLoad()
+        checkPermissionsAndLoadPostsOrRedirectToLogin()
     }
-    onLogout() {
+    onLogoutButtonHasBeenClicked() {
         logout()
     }
 }
 
-async function onLoad() {
+async function checkPermissionsAndLoadPostsOrRedirectToLogin() {
     const isLoggedIn = await checkIfUserIsAuthenticated()
     if (!isLoggedIn) {
         login()
