@@ -2,24 +2,28 @@ package at.ac.htl.leonding.demo.features.hello;
 
 import java.time.LocalDateTime;
 
-import org.jboss.resteasy.spi.HttpRequest;
-
+import at.ac.htl.leonding.demo.features.store.Database;
 import io.quarkus.logging.Log;
 import jakarta.annotation.security.PermitAll;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
-import jakarta.ws.rs.core.Context;
 
 @Path("/hello")
 @PermitAll
 public class HelloResource {
-    @Context
-    HttpRequest request;
+    public record Hello(
+        String greeting,
+        LocalDateTime created_at
+    ) {
+    }
+
+    @Inject
+    Database database;
 
     @GET
     public Hello hello() {
-        var message = String.format("send hello to client %s", request.getRemoteHost());
-        Log.info(message);
-        return new Hello("hello, world", LocalDateTime.now());
+        Log.infof("Elements in root: %d", database.root().posts().size());
+        return new Hello(String.format("hello, we have %s posts", database.root().posts().size()), LocalDateTime.now());
     }
 }

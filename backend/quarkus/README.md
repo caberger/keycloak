@@ -1,5 +1,17 @@
 # Demo Backend
 
+
+## nodbms
+
+Nein. Ich glaube Datenbanken werden überbewertet und SQL ist veraltet, das sollten wir nicht mehr unterrichten. Ich glaube ein DBMS macht so etwas wie einen "altmodischen" Applikatonsserver oberhalb seiner Daten-Speicher-Implementierung.
+
+Ein DBMS ist ein oder mehrere Prozesse mit Benutzerverwaltung, Verbindungsmanagemanr, Session - Handling, oft sogar mit eigener Programmiersprache (PL/SQL), einer Abfragesprache (SQL), etc. Das ist alles viel zu kompliziert und unnötig.
+
+Heutzutage werden alle diese Eigenschaften eines Applikations-Servers viel besser von eigenen Server Anwendungen (der "neuen Art"), z.B. quarkus, in modernen Sprachen wie Java implementiert. Solche Server haben ihre eigene Benutzerverwaltung, Connection und Session Management. Die Abfragesprache nach aussen ist sind typischerweise Web-Services (REST) statt SQL. Warum nicht einfach eine starke Daten-Speicherungs-Technoglogie in quarkus verwenden - und fertig?
+
+## Purpose
+
+
 This is a backend that demonstrates the basics of an Elipse Microprofile REST Server that uses JPA to access a relational database. Its purpose is to give an introduction to using quarkus. 
 
 To give a smooth start to readers who com from other fields than quarkus or Jakarta EE we made some decisions for didactical reasons:

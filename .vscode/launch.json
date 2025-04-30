@@ -14,8 +14,9 @@
             "request": "launch",
             "mainClass": "at.ac.htl.leonding.demo.Main",
             "projectName": "backend",
-            "cwd": "${workspaceFolder}/application-server",
+            "cwd": "${workspaceFolder}/backend/quarkus",
             "vmArgs": [
+                "--add-exports", "java.base/jdk.internal.misc=ALL-UNNAMED"
             ]
         },        
     ]

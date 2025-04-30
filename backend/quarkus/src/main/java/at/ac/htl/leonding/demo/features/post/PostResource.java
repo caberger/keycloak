@@ -6,65 +6,22 @@ import java.util.stream.Collectors;
 
 import org.eclipse.microprofile.jwt.Claim;
 import org.eclipse.microprofile.jwt.ClaimValue;
-
-import at.ac.htl.leonding.demo.Mapper;
-import io.quarkus.hibernate.orm.panache.PanacheRepository;
+import at.ac.htl.leonding.demo.features.store.Database;
 import io.quarkus.logging.Log;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.json.JsonString;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
-
-@Entity
-class TbPost {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-
-    String title;
-    String body;
-    boolean published;
-}
-
-@ApplicationScoped
-class PostRepository implements PanacheRepository<TbPost> {
-}
-
-@ApplicationScoped
-class PostMapper implements Mapper<TbPost, Post> {
-    public Post toResource(TbPost post) {
-        return new Post(
-                post.id,
-                post.title,
-                post.body,
-                post.published);
-    }
-
-    public TbPost fromResource(Post p) {
-        var post = new TbPost();
-
-        post.id = p.id();
-        post.title = p.title();
-        post.body = p.body();
-        post.published = p.published();
-
-        return post;
-    }
-}
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 
 @Path("/posts")
+@Produces(MediaType.APPLICATION_JSON)
 public class PostResource {
     @Inject
-    PostRepository postRepository;
-    @Inject
-    Mapper<TbPost, Post> mapper;
+    Database database;
 
     @Claim("realm_access")
     ClaimValue<Map<String, List<JsonString>>> realmAccess;
@@ -73,14 +30,14 @@ public class PostResource {
     @Path("/my")
     @PermitAll
     public List<Post> onlyMyPosts() {
-        return postRepository
-                .listAll()
-                .stream()
-                .map(mapper::toResource)
-                .filter(this::amIallowedToSeeThis)
-                .toList();
+        return posts()
+        .stream()
+        .filter(this::amIallowedToSeeThis)
+        .toList();
     }
-
+    List<Post> posts() {
+        return database.root().posts();
+    }
     boolean amIallowedToSeeThis(Post post) {
         var roles = realmAccess
                 .getValue()
@@ -92,15 +49,17 @@ public class PostResource {
 
         return post.published() || roles.contains("editor");
     }
+    @GET
+    @PermitAll
+    @Path("/all")
+    /* just for demo testing, remove this! */
+    public List<Post> allPosts() {
+        return posts();
+    }
 
     @GET
     @RolesAllowed("editor")
     public List<Post> all() {
-        return postRepository
-                .listAll()
-                .stream()
-                .map(mapper::toResource)
-                .toList();
-
+        return database.root().posts();
     }
 }
