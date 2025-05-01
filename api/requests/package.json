@@ -3,7 +3,8 @@
     "version": "1.0.0",
     "main": "index.js",
     "scripts": {
-        "start": "httpyac send --all requests.http"
+        "test": "httpyac send --all requests.http",
+        "start": "echo 'for tests only. Please run npm test'"
     },
     "keywords": [],
     "author": "",
