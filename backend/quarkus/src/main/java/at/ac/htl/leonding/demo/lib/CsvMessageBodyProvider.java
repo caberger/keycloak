@@ -1,5 +1,6 @@
 package at.ac.htl.leonding.demo.lib;
 
+import com.fasterxml.jackson.dataformat.csv.CsvGenerator;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.Produces;
@@ -22,7 +23,12 @@ import java.util.Optional;
 @Consumes("text/csv")
 @Produces("text/csv")
 public class CsvMessageBodyProvider implements MessageBodyReader<Object>, MessageBodyWriter<Object>{
-
+    CsvMapper mapper() {
+        return CsvMapper
+            .builder()
+            .enable(CsvGenerator.Feature.ALWAYS_QUOTE_STRINGS)
+            .build();
+    }
     @Override
     public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
         return true;
@@ -30,7 +36,7 @@ public class CsvMessageBodyProvider implements MessageBodyReader<Object>, Messag
     @Override
     public Object readFrom(Class<Object> type, Type genericType, Annotation[] annotations, MediaType mediaType,
             MultivaluedMap<String, String> httpHeaders, InputStream entityStream) throws java.io.IOException, jakarta.ws.rs.WebApplicationException {
-        var mapper = new CsvMapper();
+        var mapper = mapper();
         var obj = mapper.readValue(entityStream, type);
         return obj;
     }
@@ -43,7 +49,7 @@ public class CsvMessageBodyProvider implements MessageBodyReader<Object>, Messag
     public void writeTo(Object object, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType,
             MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream)
             throws IOException, WebApplicationException {
-        var mapper = new CsvMapper();
+        var mapper = mapper();
         var clazz = objectClass(object, type);
         if (clazz.isPresent()) {
             var schema = mapper.typedSchemaFor(clazz.get()).withHeader();
