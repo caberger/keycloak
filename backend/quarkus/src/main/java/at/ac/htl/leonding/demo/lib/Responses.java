@@ -3,6 +3,7 @@ package at.ac.htl.leonding.demo.lib;
 import java.net.URI;
 
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.StreamingOutput;
 
 public interface Responses {
     static Response ok(Object entity) {
@@ -25,5 +26,8 @@ public interface Responses {
     }
     static Response exists(Object entity) {
         return Response.status(Response.Status.CONFLICT).entity(entity).build();
+    }
+    static Response ok(StreamingOutput so) {
+        return Response.ok(so).build();
     }
 }

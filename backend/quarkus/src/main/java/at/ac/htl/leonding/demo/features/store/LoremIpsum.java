@@ -6,6 +6,8 @@ import java.lang.System.Logger.Level;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.IntStream;
+
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import com.github.javafaker.Faker;
@@ -24,6 +26,9 @@ import jakarta.inject.Inject;
 */
 @ApplicationScoped
 public class LoremIpsum {
+    static int NUMBER_OF_DUMMY_USERS_TO_CREATE = 1000;
+    static int NUMBER_OF_DUMMY_POSTS_PER_USER = 5;
+
     @Inject Logger log;
     @ConfigProperty(name="store.create-user-id", defaultValue="")
     String createUserId;
@@ -35,22 +40,35 @@ public class LoremIpsum {
     List<User> demoData() { 
         var users = new ArrayList<User>();
         if (!createUserId.isBlank()) {
-            var faker = new Faker();
-            var random = faker.random();
-            var user = new User(UUID.fromString(createUserId));
-            for (var i = 0; i < 5; i++) {
-                user.posts().add(new Post(faker.hacker().verb(), faker.chuckNorris().fact(), random.nextBoolean()));
-            }
+            var user = createUser(UUID.fromString(createUserId));
+            final int additionalUsersToCreate = NUMBER_OF_DUMMY_USERS_TO_CREATE - 1;
+            log.log(Level.INFO, "add default user {0} and {1} more users with {2} posts for each...", createUserId, additionalUsersToCreate, NUMBER_OF_DUMMY_POSTS_PER_USER);
             users.add(user);
+            IntStream
+                .range(0, additionalUsersToCreate)
+                .mapToObj(n -> UUID.randomUUID())
+                .map(this::createUser)
+                .forEach(users::add);
+            log.log(Level.INFO, "done adding {0} users with a total of {1} posts.", NUMBER_OF_DUMMY_USERS_TO_CREATE, NUMBER_OF_DUMMY_USERS_TO_CREATE * NUMBER_OF_DUMMY_POSTS_PER_USER);
         }
         return users;
     }
+    User createUser(UUID userId) {
+        var faker = new Faker();
+        var random = faker.random();
+        var user = new User(userId);
+        for (var i = 0; i < NUMBER_OF_DUMMY_POSTS_PER_USER; i++) {
+            user.posts().add(new Post(faker.hacker().verb(), faker.chuckNorris().fact(), random.nextBoolean()));
+        }
+        return user;
+    }
     void onInit(@Observes StartupEvent ev) {
         if (generation.equals("drop-and-create")) {
+            log.log(Level.INFO, "store.generation={0} found in configuration, dropping database", generation);
             Store.drop();
         }
         if (DataRoot.instance() == null) {
-            log.log(Level.INFO, "empty database, create root ({0})", createUserId);
+            log.log(Level.INFO, "empty database found, create new");
             final var initialRoot = createRoot();
             Store.set(manager -> {
                 manager.setRoot(initialRoot);

@@ -8,11 +8,11 @@ import at.ac.htl.leonding.demo.features.store.DataRoot;
 
 interface XlsxExporter {
     static void exportTo(OutputStream os) {
-        new Exporter().export(os);
+        Exporter.export(os);
     }
 }
 class Exporter {
-    void export(OutputStream os) {
+    static void export(OutputStream os) {
         try (var workbook = new XSSFWorkbook()) {
             var font = workbook.createFont();
             font.setFontHeightInPoints((short) 15);
@@ -38,8 +38,8 @@ class Exporter {
             var headerIndex = 0;
             postHeaderRow.createCell(headerIndex++).setCellValue("userId");
             postHeaderRow.createCell(headerIndex++).setCellValue("title");
-            postHeaderRow.createCell(headerIndex++).setCellValue("body");
             postHeaderRow.createCell(headerIndex++).setCellValue("published");
+            postHeaderRow.createCell(headerIndex++).setCellValue("body");
             var it = postHeaderRow.cellIterator();
             while(it.hasNext()) {
                 it.next().setCellStyle(boldStyle);
@@ -57,8 +57,8 @@ class Exporter {
                     var postRow = postsSheet.createRow(postIndex++);
                     postRow.createCell(postColumIndex++).setCellValue(userId);
                     postRow.createCell(postColumIndex++).setCellValue(post.title());
-                    postRow.createCell(postColumIndex++).setCellValue(post.body());
                     postRow.createCell(postColumIndex++).setCellValue(post.published());
+                    postRow.createCell(postColumIndex++).setCellValue(post.body());
                     postColumns = postColumIndex;
                 }
             }
