@@ -13,30 +13,32 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import at.ac.htl.leonding.demo.features.post.Post;
 import at.ac.htl.leonding.demo.features.user.User;
 
-sealed interface XlsxImportResult permits XlsxImportResult.Imported, XlsxImportResult.Failed {
-    record Imported(List<User> users) implements XlsxImportResult {}
-    record Failed(Exception e) implements XlsxImportResult {}
-}
 interface XlsxImportProcessor {
-    static XlsxImportResult parse(InputStream is) {
-        XlsxImportResult result = null;
+    sealed interface Result permits Result.Imported, Result.Failed {
+        record Imported(List<User> users) implements Result {}
+        record Failed(Exception e) implements Result {}
+    }
+    
+    static Result parse(InputStream is) {
+        Result result;
         try (var workbook = new XSSFWorkbook(is)) {
             result = UserImporter.parseUsers(workbook);
             List<User> users = switch(result) {
-                case XlsxImportResult.Imported imported -> imported.users();
-                case XlsxImportResult.Failed failed -> List.of();
+                case Result.Imported imported -> imported.users();
+                case Result.Failed failed -> List.of();
             };
             if (!users.isEmpty()) {
                 result = PostsImporter.parse(workbook, users);
             }
         } catch (Exception e) {
-            result = new XlsxImportResult.Failed(e);
+            result = new XlsxImportProcessor.Result.Failed(e);
         }
         return result;
     }
 }
+
 interface UserImporter {
-    static XlsxImportResult parseUsers(XSSFWorkbook workbook) {
+    static XlsxImportProcessor.Result parseUsers(XSSFWorkbook workbook) {
         var sheet = workbook.getSheet(SheetNames.User.name());
         if (sheet == null) {
             throw new DocumentFormatException("no such sheet: " + SheetNames.User.name());
@@ -57,11 +59,11 @@ interface UserImporter {
                 users.add(new User(UUID.fromString(id)));
             }
         }
-        return new XlsxImportResult.Imported(users);
+        return new XlsxImportProcessor.Result.Imported(users);
     }
 }
 interface PostsImporter {
-    static XlsxImportResult parse(XSSFWorkbook workbook, List<User> userList) {
+    static XlsxImportProcessor.Result parse(XSSFWorkbook workbook, List<User> userList) {
         var userMap = new HashMap<UUID, User>();
         userList.forEach(user -> userMap.put(user.id(), user));
         var sheet = workbook.getSheet(SheetNames.Post.name());
@@ -88,6 +90,6 @@ interface PostsImporter {
         }
         var users = new ArrayList<User>(userMap.size());
         users.addAll(userMap.values());
-        return new XlsxImportResult.Imported(users);
+        return new XlsxImportProcessor.Result.Imported(users);
     }
 }
