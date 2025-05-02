@@ -1,4 +1,4 @@
-package at.ac.htl.leonding.demo.features.export;
+package at.ac.htl.leonding.demo.features.importexport;
 
 import at.ac.htl.leonding.demo.lib.Responses;
 import jakarta.annotation.security.PermitAll;
@@ -10,9 +10,9 @@ import jakarta.ws.rs.core.Response;
 @Path("/export")
 @PermitAll // remove this!
 @Produces("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-public class XlsxExportResource {
+public class XlsxResource {
     @GET
     public Response export() {
-        return Responses.ok(XlsxExporter::exportTo);
+        return Responses.ok(XlsxExportProcessor::exportTo);
     }
 }

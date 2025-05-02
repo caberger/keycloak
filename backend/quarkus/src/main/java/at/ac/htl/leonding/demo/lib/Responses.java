@@ -12,6 +12,9 @@ public interface Responses {
     static Response ok() {
         return Response.ok().build();
     }
+    static Response ok(StreamingOutput output) {
+        return Response.ok(output).build();
+    }
     static Response created(URI location) {
         return Response.created(location).build();
     }
@@ -26,8 +29,5 @@ public interface Responses {
     }
     static Response exists(Object entity) {
         return Response.status(Response.Status.CONFLICT).entity(entity).build();
-    }
-    static Response ok(StreamingOutput so) {
-        return Response.ok(so).build();
     }
 }

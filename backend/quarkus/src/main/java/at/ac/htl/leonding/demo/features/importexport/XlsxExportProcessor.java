@@ -1,12 +1,13 @@
-package at.ac.htl.leonding.demo.features.export;
+package at.ac.htl.leonding.demo.features.importexport;
 
 import java.io.OutputStream;
 import java.util.stream.IntStream;
 
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import at.ac.htl.leonding.demo.features.store.DataRoot;
 
-interface XlsxExporter {
+interface XlsxExportProcessor {
     static void exportTo(OutputStream os) {
         Exporter.export(os);
     }
@@ -25,21 +26,21 @@ class Exporter {
 
             var userIndex = 0;
             var postIndex = 0;
-            var userSheet = workbook.createSheet("User");
+            var userSheet = workbook.createSheet(SheetNames.User.name());
             var userHeaderRow = userSheet.createRow(userIndex++);
             userHeaderRow.setRowStyle(boldStyle);
             //userHeaderRow.getRowStyle().setFont(boldFont);
             var idRow = userHeaderRow.createCell(0);
-            idRow.setCellValue("id");
+            idRow.setCellValue(UserTableHeaders.id.name());
             idRow.setCellStyle(boldStyle);
 
-            var postsSheet = workbook.createSheet("Post");
+            var postsSheet = workbook.createSheet(SheetNames.Post.name());
             var postHeaderRow = postsSheet.createRow(postIndex++);
             var headerIndex = 0;
-            postHeaderRow.createCell(headerIndex++).setCellValue("userId");
-            postHeaderRow.createCell(headerIndex++).setCellValue("title");
-            postHeaderRow.createCell(headerIndex++).setCellValue("published");
-            postHeaderRow.createCell(headerIndex++).setCellValue("body");
+            postHeaderRow.createCell(headerIndex++).setCellValue(PostTableHeaders.userId.name());
+            postHeaderRow.createCell(headerIndex++).setCellValue(PostTableHeaders.title.name());
+            postHeaderRow.createCell(headerIndex++).setCellValue(PostTableHeaders.published.name());
+            postHeaderRow.createCell(headerIndex++).setCellValue(PostTableHeaders.body.name());
             var it = postHeaderRow.cellIterator();
             while(it.hasNext()) {
                 it.next().setCellStyle(boldStyle);
