@@ -22,7 +22,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
 
 @Path("/users")
-@PermitAll
+@PermitAll // for easier debugging, must be removed when debugging is done.
 @Produces({MediaType.APPLICATION_JSON, "text/csv"})
 public class UserResource {
     @Inject

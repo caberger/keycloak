@@ -1,20 +1,11 @@
 package at.ac.htl.leonding.demo.features.store;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
-import java.io.File;
-import java.io.IOException;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.CompletionException;
-
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import com.github.javafaker.Faker;
@@ -45,9 +36,10 @@ public class LoremIpsum {
         var users = new ArrayList<User>();
         if (!createUserId.isBlank()) {
             var faker = new Faker();
+            var random = faker.random();
             var user = new User(UUID.fromString(createUserId));
             for (var i = 0; i < 5; i++) {
-                user.posts().add(new Post(faker.harryPotter().quote(), faker.chuckNorris().fact(), i % 2 == 0));
+                user.posts().add(new Post(faker.hacker().verb(), faker.chuckNorris().fact(), random.nextBoolean()));
             }
             users.add(user);
         }

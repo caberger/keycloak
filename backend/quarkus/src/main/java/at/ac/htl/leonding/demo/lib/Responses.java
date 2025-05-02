@@ -8,6 +8,9 @@ public interface Responses {
     static Response ok(Object entity) {
         return Response.ok(entity).build();
     }
+    static Response ok() {
+        return Response.ok().build();
+    }
     static Response created(URI location) {
         return Response.created(location).build();
     }
