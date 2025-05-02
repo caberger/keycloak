@@ -17,12 +17,12 @@ client_id=frontend&username=john.doe&password=password&grant_type=password&redir
 ?? body includes Bearer
 
 ###
-GET {{BASE}}/posts
+GET {{BASE}}/users/posts
 Authorization: Bearer {{john.access_token}}
 Accept: application/json
 ###
 # @name addpost
-POST {{BASE}}/posts
+PUT {{BASE}}/users/posts
 Authorization: Bearer {{john.access_token}}
 Content-Type: application/json
 
@@ -31,7 +31,14 @@ Content-Type: application/json
     "body": "This shows how to append a post",
     "published": true
 }
+
+?? status == 201
 ###
-GET {{BASE}}/posts
+GET {{BASE}}/users/posts
 Authorization: Bearer {{john.access_token}}
 Accept: text/csv
+###
+# @name me
+GET {{BASE}}/users/i
+Authorization: Bearer {{john.access_token}}
+Accept: application/json

@@ -2,6 +2,7 @@ package at.ac.htl.leonding.demo.features.user;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 import at.ac.htl.leonding.demo.features.post.Post;
 
@@ -11,10 +12,10 @@ import at.ac.htl.leonding.demo.features.post.Post;
  * @Param posts the posts created by this user.
 */
 public record User(
-    String id,
+    UUID id,
     List<Post> posts
 ) {
-    public User(String id) {
+    public User(UUID id) {
         this(id, new LinkedList<>());
     }
 }

@@ -1,10 +1,10 @@
 package at.ac.htl.leonding.demo.features.backup;
 
 import org.eclipse.store.afs.nio.types.NioFileSystem;
-import org.eclipse.store.storage.embedded.types.EmbeddedStorageManager;
 import org.eclipse.store.storage.types.StorageDataConverterTypeBinaryToCsv;
+
+import at.ac.htl.leonding.demo.lib.Store;
 import jakarta.annotation.security.PermitAll;
-import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -14,13 +14,12 @@ import jakarta.ws.rs.core.Response;
 @Path("/backup")
 @Produces(MediaType.APPLICATION_JSON)
 public class Backup {
-    static final String TARGET="target";
-    @Inject
-    EmbeddedStorageManager storageManager;
+    static final String TARGET = "target";
 
     @GET
     @PermitAll
     public Response backup() {
+        var storageManager = Store.instance();
         storageManager.issueFullBackup(NioFileSystem.New().ensureDirectoryPath(TARGET, "backup"));
         var fileSystem = NioFileSystem.New();
         var connection = storageManager.createConnection();

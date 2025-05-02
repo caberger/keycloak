@@ -3,10 +3,11 @@ package at.ac.htl.leonding.demo.features.authorization;
 import java.io.IOException;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
+import java.util.UUID;
 
 import org.eclipse.microprofile.jwt.JsonWebToken;
-import at.ac.htl.leonding.demo.features.store.Database;
 import at.ac.htl.leonding.demo.features.user.User;
+import at.ac.htl.leonding.demo.features.user.UserRepository;
 import jakarta.annotation.Priority;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Priorities;
@@ -23,29 +24,27 @@ import jakarta.ws.rs.ext.Provider;
 @Priority(Priorities.USER)
 public class AuthorizationFilter implements ContainerRequestFilter {
     @Inject JsonWebToken jwt;
-    @Inject Database database;
     @Inject Logger log;
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
         if (jwt.getSubject() != null) {
-            addUser();
+            final var id = UUID.fromString(jwt.getSubject());
+            var existingUser = UserRepository.find(id);
+            if (!existingUser.isPresent()) {
+                var user = new User(id);
+                log.log(Level.INFO, "we welcome our new user {0}", user.id());
+                UserRepository.add(user);
+            }
         }
     }
     void addUser() {
-        var existingUser = database
-            .users()
-            .stream()
-            .filter(user -> user.id().equals(jwt.getSubject()))
-            .findAny()
-            ;
+        final var id = UUID.fromString(jwt.getSubject());
+        var existingUser = UserRepository.find(id);
         if (!existingUser.isPresent()) {
-            var user = new User(jwt.getSubject());
+            var user = new User(id);
             log.log(Level.INFO, "we welcome our new user {0}", user.id());
-            database.update(store -> {
-                database.users().add(user);
-                store.store(database.root());
-            });
+            UserRepository.add(user);
         }
     }
 }
