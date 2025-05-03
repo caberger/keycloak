@@ -1,11 +1,17 @@
 package at.ac.htl.leonding.demo.features.importexport;
 
 import java.io.OutputStream;
+import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+
+import at.ac.htl.leonding.demo.features.post.Post;
 import at.ac.htl.leonding.demo.features.user.User;
 
 interface XlsxExportProcessor {
@@ -48,11 +54,14 @@ class Exporter implements Consumer<OutputStream> {
 
         var postsSheet = workbook.createSheet(SheetNames.Post.name());
         var postHeaderRow = postsSheet.createRow(postIndex++);
-        var headerIndex = 0;
-        postHeaderRow.createCell(headerIndex++).setCellValue(PostTableHeaders.userId.name());
-        postHeaderRow.createCell(headerIndex++).setCellValue(PostTableHeaders.title.name());
-        postHeaderRow.createCell(headerIndex++).setCellValue(PostTableHeaders.published.name());
-        postHeaderRow.createCell(headerIndex++).setCellValue(PostTableHeaders.body.name());
+        
+        Consumer<PostTableHeaders[]> createHeaders = headers -> {
+            var col = 0;
+            for (var header: headers) {
+                postHeaderRow.createCell(col++).setCellValue(header.name());
+            }
+        }; 
+        createHeaders.accept(PostTableHeaders.values());
         var it = postHeaderRow.cellIterator();
         while(it.hasNext()) {
             it.next().setCellStyle(boldStyle);
@@ -71,6 +80,11 @@ class Exporter implements Consumer<OutputStream> {
                 postRow.createCell(postColumIndex++).setCellValue(post.title());
                 postRow.createCell(postColumIndex++).setCellValue(post.published() ? "TRUE" : "FALSE");
                 postRow.createCell(postColumIndex++).setCellValue(post.body());
+                if (post.createdAt() == null) {
+                    throw new RuntimeException("date must not be null"); 
+                }
+                var dt = Formatters.dateFormatter.format(post.createdAt());
+                postRow.createCell(postColumIndex++).setCellValue(dt);
                 postColumns = postColumIndex;
             }
         }

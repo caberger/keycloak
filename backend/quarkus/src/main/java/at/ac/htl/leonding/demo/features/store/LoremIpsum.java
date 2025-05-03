@@ -3,6 +3,7 @@ package at.ac.htl.leonding.demo.features.store;
 
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -65,7 +66,7 @@ public class LoremIpsum {
         var random = faker.random();
         var user = new User(userId);
         for (var i = 0; i < NUMBER_OF_DUMMY_POSTS_PER_USER; i++) {
-            user.posts().add(new Post(faker.company().catchPhrase(), faker.chuckNorris().fact(), random.nextBoolean()));
+            user.posts().add(new Post(faker.company().catchPhrase(), faker.chuckNorris().fact(), random.nextBoolean(), LocalDateTime.now()));
         }
         return user;
     }

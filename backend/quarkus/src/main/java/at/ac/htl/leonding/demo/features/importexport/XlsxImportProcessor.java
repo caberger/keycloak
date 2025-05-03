@@ -1,6 +1,7 @@
 package at.ac.htl.leonding.demo.features.importexport;
 
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -67,23 +68,35 @@ interface PostsImporter {
             throw new DocumentFormatException("no such sheet: " + SheetNames.Post.name());
         }
         var rowIterator = sheet.rowIterator();
+        var lineNumber = 0;
         if (!rowIterator.hasNext()) {
             throw new DocumentFormatException("no header in " + SheetNames.Post.name());
         }
         rowIterator.next(); //TODO: check headers
+        lineNumber++;
         while (rowIterator.hasNext()) {
             var row = rowIterator.next();
             var col = 0;
             var userId = row.getCell(col++).getStringCellValue();
-            var title = row.getCell(col++).getStringCellValue();
-            var published = row.getCell(col++).getStringCellValue();
-            var body = row.getCell(col++).getStringCellValue();
+            if (userId == null || userId.isBlank()) {
+                throw new POIXMLException("userId is empty in row: " + lineNumber);
+            }
             var user = userMap.get(UUID.fromString(userId));
             if (user == null) {
                 throw new POIXMLException("Post user user not found: " + userId);
             }
-            var post = new Post(title, body, published == "TRUE");
+            var title = row.getCell(col++).getStringCellValue();
+            var published = row.getCell(col++).getStringCellValue();
+            var body = row.getCell(col++).getStringCellValue();
+            var dateTime = row.getCell(col++).getStringCellValue();
+            var date = LocalDateTime.parse(dateTime, Formatters.dateFormatter);
+            if (date == null) {
+                throw new DocumentFormatException("date must not be null");
+            }
+            var post = new Post(title, body, published == "TRUE", date);
+            
             user.posts().add(post);
+            lineNumber++;
         }
         var users = new ArrayList<User>(userMap.size());
         users.addAll(userMap.values());

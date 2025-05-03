@@ -20,9 +20,10 @@ import java.util.Collection;
 import java.util.Optional;
 
 @Provider
-@Consumes("text/csv")
-@Produces("text/csv")
-public class CsvMessageBodyProvider implements MessageBodyReader<Object>, MessageBodyWriter<Object>{
+@Consumes(CsvMessageBodyProvider.MEDIA_TYPE)
+@Produces(CsvMessageBodyProvider.MEDIA_TYPE)
+public class CsvMessageBodyProvider implements MessageBodyReader<Object>, MessageBodyWriter<Object> {
+    public static final String MEDIA_TYPE = "text/csv";
     CsvMapper mapper() {
         return CsvMapper
             .builder()

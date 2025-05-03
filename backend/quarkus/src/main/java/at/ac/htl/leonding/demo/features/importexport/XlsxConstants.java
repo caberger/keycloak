@@ -1,5 +1,7 @@
 package at.ac.htl.leonding.demo.features.importexport;
 
+import java.time.format.DateTimeFormatter;
+
 enum SheetNames {
     User,
     Post
@@ -11,5 +13,10 @@ enum PostTableHeaders {
     userId,
     title,
     published,
-    body
+    body,
+    createdAt
+}
+
+class Formatters {
+    static final DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 }
