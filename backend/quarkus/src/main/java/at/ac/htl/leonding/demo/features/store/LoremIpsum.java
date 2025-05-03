@@ -4,6 +4,7 @@ package at.ac.htl.leonding.demo.features.store;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.IntStream;
@@ -29,7 +30,7 @@ public class LoremIpsum {
     static int NUMBER_OF_DUMMY_POSTS_PER_USER = 5;
 
     @Inject Logger log;
-    @ConfigProperty(name="store.create.user-id", defaultValue="")
+    @ConfigProperty(name="store.create.user-ids", defaultValue="")
     String createUserId;
     @ConfigProperty(name="store.generation", defaultValue = "none")
     String generation;
@@ -41,15 +42,21 @@ public class LoremIpsum {
     List<User> demoData() { 
         var users = new ArrayList<User>();
         if (!createUserId.isBlank()) {
-            var user = createUser(UUID.fromString(createUserId));
-            log.log(Level.INFO, "add default user {0} and {1} more users with {2} posts for each...", createUserId, additionalUsersToCreate, NUMBER_OF_DUMMY_POSTS_PER_USER);
-            users.add(user);
+            var defaultUserIds = createUserId.split(",");
+            
+            Arrays
+                .stream(defaultUserIds)
+                .map(id -> createUser(UUID.fromString(id)))
+                .forEach(users::add);
+            
+            log.log(Level.INFO, "add default users {0} and {1} more users with {2} posts for each...", createUserId, additionalUsersToCreate, NUMBER_OF_DUMMY_POSTS_PER_USER);
             IntStream
                 .range(0, additionalUsersToCreate)
                 .mapToObj(n -> UUID.randomUUID())
                 .map(this::createUser)
                 .forEach(users::add);
-            log.log(Level.INFO, "done adding {0} users with a total of {1} posts.", additionalUsersToCreate + 1, (additionalUsersToCreate + 1) * NUMBER_OF_DUMMY_POSTS_PER_USER);
+            var count = additionalUsersToCreate + users.size();
+            log.log(Level.INFO, "done adding {0} users with a total of {1} posts.", count, count * NUMBER_OF_DUMMY_POSTS_PER_USER);
         }
         return users;
     }
