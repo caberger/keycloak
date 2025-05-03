@@ -1,6 +1,6 @@
 package at.ac.htl.leonding.demo.features.user;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,6 +16,6 @@ public record User(
     List<Post> posts
 ) {
     public User(UUID id) {
-        this(id, new LinkedList<>());
+        this(id, new ArrayList<>());
     }
 }

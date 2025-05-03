@@ -35,7 +35,7 @@ public class XlsxResource {
     @POST
     public Response parse(InputStream inputStream) {
         return switch(XlsxImportProcessor.parse(inputStream)) {
-            case XlsxImportProcessor.Result.Parsed ok -> {
+            case XlsxImportProcessor.Result.Success ok -> {
                 UserRepository.add(ok.users());
                 log.log(Level.INFO, "{0} users imported", ok.users().size());
                 yield Responses.ok();

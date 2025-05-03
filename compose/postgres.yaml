@@ -13,5 +13,6 @@ services:
             - POSTGRES_DB=keycloak
         healthcheck:
             test: pg_isready --dbname=keycloak --username=keycloak
+            interval: 5s
 volumes:
     postgres:

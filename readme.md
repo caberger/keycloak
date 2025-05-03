@@ -9,20 +9,22 @@ The frontend uses lit-html to show a simple main page that displays user details
 
 ## Backend
 
-The backend is a simple ORM Rest - Api implemented in rust
+The rust folder is a simple ORM Rest - Api implemented in rust (deprecated).
 
 ## Application server
 
-application-server is a quarkus REST - Service
+quarkus contains an application-server implemented with quarkus. 
 
 ## Authentication and Authorization server
 
-The keycloak server implements the user database and returns Json Web Tokens on successfull authentication. As a backend a postgresql database is used.
+The keycloak server implements the user database and returns Json Web Tokens on successful authentication. As a backend a postgresql database is used.
 
 ## Database
 
-We use postgresql as database. This server contains two databases. The "demo" database contains demo data for the backend. The "keycloak" database is the storage for keycloak.
+The "keycloak" database is the storage for keycloak.
 
+We use [eclipse store](https://eclipsestore.io/) as database for the backend and support backup as well as export/import to xlsx (Libreoffice Calc and/or Excel format). 
+For motivation see [Storage](https://docs.eclipsestore.io/manual/storage/index.html)
 
 ## Building
 
@@ -30,18 +32,7 @@ Building is supported on Linux and OSX.
 
 You the follwing build tools:
 - [nodejs](https://nodejs.org/)
-- [cargo](https://doc.rust-lang.org/stable/cargo/index.html)
-- [diesel](https://diesel.rs/)
-- java
-
-```bash
-brew install postgresql
-brew install rust
-brew install rustup
-rustup default stable
-rustup target add x86_64-unknown-linux-musl
-cargo install diesel_cli --no-default-features --features "postgres"
-```
+- maven
 
 
 To build the docker images run the following:
@@ -49,21 +40,12 @@ To build the docker images run the following:
 ./build.sh
 ```
 
-if you want to build the rust backend also run the following:
-```bash
-RUST=yes ./build.sh
-```
-This should start a docker compose postgres postgres database, wait until it is available, 
-generate the ORM schema.rs mapping file and create the database tables and then start the builds of our docker images.
 
-to clean all images you can use ```./compose/clean-docker.sh``` before the build.
-
-to start the system change to the compose folder and run the following:
+to start the system without full compile change to the compose folder and run the following:
 ```bash
 cd compose
 ./start.sh
 ```
-wThe service - startup procedure can be seen with ```watch docker compose ps```.
 The services have health checks included, so dependent services only start when the services they need are healthy. Wait until all four services are healthy.
 
 ## Adding users to keycloak
@@ -72,48 +54,15 @@ to create the demo realm import the file ./components/keycloak/setup/realm-expor
 
 ## delete all docker containers, images and volumes
 
-```bash
-./clean-docker.sh
-```
+to clear the cache and clean all images you can use ```./compose/clean-docker.sh``` before the build.
 
 ## backup the database
 
 ```bash
-docker compose exec postgres -- pg_dump -U demo
 docker compose exec postgres -- pg_dump -U keycloak
 ```
 
 ## Development using a local docker compose database and keycloak image
-
-For development it is necessary to build and run the docker images, see Building above
-
-To start the development containers use the following command:
-```bash
-cd ./compose
-./dev.sh
-```
-
-In a 2nd terminal run the following: 
-```bash
-watch docker compose ps
-```
-...and wait until the keycloak service is healthy.
-To create the database table run the following in the compose folder:
-```bash
-diesel migration run
-```
-Then you can start the application server with:
-```bash
-cd ./backend
-cargo run
-```
-and the frontend with:
-
-```bash
-cd ./frontend
-npm install
-npm start
-```
 
 # OIDC Security Concepts
 

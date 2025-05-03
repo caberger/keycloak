@@ -1,5 +1,4 @@
 import { token } from "./keycloak"
-export { isUserInRole } from "./roles"
 export { checkIfUserIsAuthenticated, login, logout } from "./keycloak"
 export { headers, token }
 

@@ -22,7 +22,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
 import jakarta.inject.Inject;
 
-/** 
+/**
  * Initialize database and create some demo records if we are in debug mode.
 */
 @ApplicationScoped
@@ -39,16 +39,16 @@ public class LoremIpsum {
     DataRoot createRoot() {
         return new DataRoot(demoData());
     }
-    List<User> demoData() { 
+    List<User> demoData() {
         var users = new ArrayList<User>();
         if (!createUserId.isBlank()) {
             var defaultUserIds = createUserId.split(",");
-            
+
             Arrays
                 .stream(defaultUserIds)
                 .map(id -> createUser(UUID.fromString(id)))
                 .forEach(users::add);
-            
+
             log.log(Level.INFO, "add default users {0} and {1} more users with {2} posts for each...", createUserId, additionalUsersToCreate, NUMBER_OF_DUMMY_POSTS_PER_USER);
             IntStream
                 .range(0, additionalUsersToCreate)
@@ -65,7 +65,7 @@ public class LoremIpsum {
         var random = faker.random();
         var user = new User(userId);
         for (var i = 0; i < NUMBER_OF_DUMMY_POSTS_PER_USER; i++) {
-            user.posts().add(new Post(faker.hacker().verb(), faker.chuckNorris().fact(), random.nextBoolean()));
+            user.posts().add(new Post(faker.company().catchPhrase(), faker.chuckNorris().fact(), random.nextBoolean()));
         }
         return user;
     }

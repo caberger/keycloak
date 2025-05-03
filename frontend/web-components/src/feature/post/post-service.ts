@@ -7,7 +7,6 @@ export async function loadPosts() {
     const response = await fetch(url, {headers: headers()})
     if (response.ok) {
         const posts: Post[] = await response.json()
-        console.log("posts loaded", posts)
         set(model => model.posts = posts)
     } else {
         console.warn("failed to load hello", response)

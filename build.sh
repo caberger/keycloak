@@ -4,28 +4,23 @@ set -e
 
 docker ps
 
-pushd ./frontend/frontend
+pushd ./frontend/web-components
     npm install
     npm run build
-    docker build --tag www --file docker/Dockerfile .
+#    docker build --tag www --file docker/Dockerfile .
 popd
 pushd ./backend/quarkus
 . ./build.sh
 popd
 
 pushd ./compose
-    docker compose -f postgres.yaml pull
-    pushd ./keycloak
-        docker build --tag keycloak --platform linux/amd64 .
-    popd
-    docker compose up --build --detach
-    docker compose ps
+    ./start.sh
 popd
 
 echo "==="
 echo "= the java backend have been built."
 echo "= docker compose is started."
-echo "= Now change to backend/quarkus and run mvn quarkus:dev"
-echo "= then change to frontend/frontend and run npm start"
-echo "= to build the rust backend please change to the backend/rust folder and run the build.sh file in that folder"
+echo "= now open a new terminal in $PWD/backend/quarkus and run: mvn quarkus:dev"
+echo "= then open a new terminal in $PWD/frontend/web-components and run: npm start"
+#echo "= to build the rust backend please change to the backend/rust folder and run the build.sh file in that folder"
 echo "==="

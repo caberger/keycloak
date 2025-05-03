@@ -14,8 +14,8 @@ import at.ac.htl.leonding.demo.features.post.Post;
 import at.ac.htl.leonding.demo.features.user.User;
 
 interface XlsxImportProcessor {
-    sealed interface Result permits Result.Parsed, Result.Failed {
-        record Parsed(List<User> users) implements Result {}
+    sealed interface Result permits Result.Success, Result.Failed {
+        record Success(List<User> users) implements Result {}
         record Failed(Exception exception) implements Result {}
     }
     
@@ -23,12 +23,8 @@ interface XlsxImportProcessor {
         Result result;
         try (var workbook = new XSSFWorkbook(is)) {
             result = UserImporter.parseUsers(workbook);
-            List<User> users = switch(result) {
-                case Result.Parsed imported -> imported.users();
-                case Result.Failed failed -> List.of();
-            };
-            if (!users.isEmpty()) {
-                result = PostsImporter.parse(workbook, users);
+            if (result instanceof Result.Success success) {
+                result = PostsImporter.parse(workbook, success.users());
             }
         } catch (Exception e) {
             result = new XlsxImportProcessor.Result.Failed(e);
@@ -59,7 +55,7 @@ interface UserImporter {
                 users.add(new User(UUID.fromString(id)));
             }
         }
-        return new XlsxImportProcessor.Result.Parsed(users);
+        return new XlsxImportProcessor.Result.Success(users);
     }
 }
 interface PostsImporter {
@@ -91,6 +87,6 @@ interface PostsImporter {
         }
         var users = new ArrayList<User>(userMap.size());
         users.addAll(userMap.values());
-        return new XlsxImportProcessor.Result.Parsed(users);
+        return new XlsxImportProcessor.Result.Success(users);
     }
 }

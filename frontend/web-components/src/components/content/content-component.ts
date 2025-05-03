@@ -3,7 +3,6 @@ import { isLoggedIn, Model, model } from "../../model"
 import { distinctUntilChanged } from "rxjs"
 import { AUTHENTICATION_SETTINGS } from "../../env"
 import { Post } from "../../feature/post"
-import { isUserInRole } from "../../auth"
 import _ from "lodash"
 
 class ContentComponent extends HTMLElement {
@@ -57,7 +56,7 @@ function template(model: Model) {
     const isUserLoggedIn = isLoggedIn(model)
     const template = isUserLoggedIn ? loggedIn : all
     const rolesTmpl = isUserLoggedIn ? rolesTemplate(user.roles) : ""
-    const postsTmpl = isUserLoggedIn ? postsTemplate(model.posts, isUserInRole(model, "editor")) : ""
+    const postsTmpl = isUserLoggedIn ? postsTemplate(model.posts) : ""
     return html`
         <hgroup>
             ${template}
@@ -80,7 +79,7 @@ function rolesTemplate(roles: string[]) {
     `
 }
 
-function postsTemplate(posts: Post[], isEditor: boolean) {
+function postsTemplate(posts: Post[]) {
     const postsTemplate = posts.map(post => {
         return html`
             <tr>
@@ -90,7 +89,7 @@ function postsTemplate(posts: Post[], isEditor: boolean) {
             </tr>
         `
     })
-    const text = isEditor ? "you see all posts, because you are an editor" : "you see the published posts, because you are logged in"
+    
     return html`
     <style>
         .shorten {
@@ -99,8 +98,7 @@ function postsTemplate(posts: Post[], isEditor: boolean) {
     </style>
     <div class="container-fluid">
         <hgroup>
-            <h3>Published Posts</h3>
-            <div>(${text})</div>
+            <h3>Your Posts</h3>
         </hgroup>
         <table>
             <thead>
