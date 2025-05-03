@@ -3,12 +3,20 @@ package at.ac.htl.leonding.demo.features.store;
 
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.Temporal;
+import java.time.temporal.TemporalAccessor;
+import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
@@ -43,30 +51,27 @@ public class LoremIpsum {
     List<User> demoData() {
         var users = new ArrayList<User>();
         if (!createUserId.isBlank()) {
-            var defaultUserIds = createUserId.split(",");
-
-            Arrays
-                .stream(defaultUserIds)
-                .map(id -> createUser(UUID.fromString(id)))
+            Stream.concat(
+                    Arrays.stream(createUserId.split(",")).map(UUID::fromString),
+                    IntStream.range(0, additionalUsersToCreate).mapToObj(n -> UUID.randomUUID())
+                )
+                .map(id -> createUser(id))
                 .forEach(users::add);
 
             log.log(Level.INFO, "add default users {0} and {1} more users with {2} posts for each...", createUserId, additionalUsersToCreate, NUMBER_OF_DUMMY_POSTS_PER_USER);
-            IntStream
-                .range(0, additionalUsersToCreate)
-                .mapToObj(n -> UUID.randomUUID())
-                .map(this::createUser)
-                .forEach(users::add);
             var count = additionalUsersToCreate + users.size();
             log.log(Level.INFO, "done adding {0} users with a total of {1} posts.", count, count * NUMBER_OF_DUMMY_POSTS_PER_USER);
         }
         return users;
     }
     User createUser(UUID userId) {
-        var faker = new Faker();
+        var faker = Faker.instance(new Random(System.currentTimeMillis()));
         var random = faker.random();
         var user = new User(userId);
         for (var i = 0; i < NUMBER_OF_DUMMY_POSTS_PER_USER; i++) {
-            user.posts().add(new Post(faker.company().catchPhrase(), faker.chuckNorris().fact(), random.nextBoolean(), LocalDateTime.now()));
+            var offset = random.nextInt(21 * 86400);
+            var date = LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT).minusSeconds(offset);
+            user.posts().add(new Post(faker.company().catchPhrase(), faker.chuckNorris().fact(), random.nextBoolean(), date));
         }
         return user;
     }
