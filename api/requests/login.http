@@ -1,0 +1,16 @@
+###
+# @name wellknown
+GET {{KEYCLOAK_URL}}/realms/{{REALM}}/.well-known/openid-configuration
+
+?? js response.parsedBody.issuer == {{KEYCLOAK_URL}}/realms/{{REALM}}
+
+###
+# @name login
+# @ref wellknown
+POST {{wellknown.token_endpoint}}
+Content-Type: application/x-www-form-urlencoded
+
+client_id=frontend&username=john.doe&password=password&grant_type=password&redirect_uri=http%3A%2F%2Fwww.arge3d.at
+
+?? body includes Bearer
+###

@@ -3,13 +3,14 @@ import { AUTHENTICATION_SETTINGS } from "../env"
 import { set } from "../model"
 
 const keycloak = new Keycloak(AUTHENTICATION_SETTINGS)
+/*
 const _ = setInterval(() => {
     if (keycloak.authenticated) {
         keycloak.updateToken();
         console.log("token updated", keycloak.token)
     }
 }, 30000)
-
+*/
 /** check if the user is authenticated */
 async function checkIfUserIsAuthenticated() {
     const initOptions: KeycloakInitOptions = {
@@ -26,6 +27,7 @@ async function checkIfUserIsAuthenticated() {
         } else {
             set(model => delete model.token)
         }
+        console.log("authenticated:", authenticated)
     } catch (error) {
         console.error('Failed to initialize adapter:', error)
     }
@@ -41,6 +43,7 @@ async function loadProfile() {
         model.user.token = keycloak.token
         model.user.roles = keycloak.realmAccess.roles
     })
+    console.log("profile loaded")
 }
 async function login() {
     await keycloak.login()

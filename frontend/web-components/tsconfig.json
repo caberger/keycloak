@@ -4,9 +4,11 @@
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
     "module": "esnext",
-    "target": "es6",
-    "moduleResolution": "node",
-    "allowJs": true
+    "target": "ES2021",
+    "sourceMap": true,
+    "inlineSources": true,
+    "moduleResolution": "bundler",
+    "allowJs": true,
   },
   "files": ["src/index.ts"]
 }

@@ -1,28 +1,14 @@
-@REALM=demo
-@KEYCLOAK_URL=http://localhost:8000
-@BASE=http://localhost:8080/api
-
-# @name wellknown
-GET {{KEYCLOAK_URL}}/realms/{{REALM}}/.well-known/openid-configuration
-
-?? js response.parsedBody.issuer == {{KEYCLOAK_URL}}/realms/{{REALM}}
-
 ###
-# @name john
-POST {{wellknown.token_endpoint}}
-Content-Type: application/x-www-form-urlencoded
-
-client_id=frontend&username=john.doe&password=password&grant_type=password&redirect_uri=http%3A%2F%2Fwww.arge3d.at
-
-?? body includes Bearer
+# @import ./login.http
+# @ref login
 ###
 GET {{BASE}}/users/posts
-Authorization: Bearer {{john.access_token}}
+Authorization: Bearer {{login.access_token}}
 Accept: application/json
 ###
 # @name addpost
 PUT {{BASE}}/users/posts
-Authorization: Bearer {{john.access_token}}
+Authorization: Bearer {{login.access_token}}
 Content-Type: application/json
 
 {
@@ -34,12 +20,12 @@ Content-Type: application/json
 ?? status == 201
 ###
 GET {{BASE}}/users/posts
-Authorization: Bearer {{john.access_token}}
+Authorization: Bearer {{login.access_token}}
 Accept: text/csv
 ###
 # @name me
 GET {{BASE}}/users/i
-Authorization: Bearer {{john.access_token}}
+Authorization: Bearer {{login.access_token}}
 Accept: application/json
 ###
 # @name import
@@ -51,9 +37,15 @@ Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
 ?? status == 200
 ###
 # @name export
+# @no-log
 GET {{BASE}}/portation/xlsx
 Accept: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
 
->> /dev/null
+{{ 
+    response.body = "...skip binary..."
+    delete response.rawHeaders
+    console.log("=== export again ===")
+    console.log(response)
+}}
 ?? status == 200
 ###

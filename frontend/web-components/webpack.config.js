@@ -2,7 +2,6 @@ const path = require("path")
 const webpack = require("webpack")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
-const { CleanWebpackPlugin } = require("clean-webpack-plugin")
 const CopyWebpackPlugin = require("copy-webpack-plugin")
 
 const isProduction = process.env.NODE_ENV == 'production'
@@ -11,6 +10,7 @@ const stylesHandler = isProduction ? MiniCssExtractPlugin.loader : 'style-loader
 const config = {
     entry: './src/index.ts',
     output: {
+        clean: true,
         path: path.resolve(__dirname, 'dist'),
     },
     devtool: "cheap-source-map",
@@ -47,7 +47,6 @@ const config = {
             scriptLoading: "module"
         }),
         new MiniCssExtractPlugin(),
-        new CleanWebpackPlugin(),
         new CopyWebpackPlugin({
             patterns: [
                 { from: "images", to: "images" },

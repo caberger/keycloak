@@ -1,6 +1,6 @@
 import { html, render } from "lit-html"
 import { login, logout } from "../../auth"
-import { Model, isLoggedIn, model } from "../../model"
+import { isLoggedIn, Model, model } from "../../model"
 
 class LoginButtonElement extends HTMLElement {
     connectedCallback() {

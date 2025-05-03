@@ -1,18 +1,19 @@
 import { html, render } from "lit-html"
-import { Model, isLoggedIn, model } from "../../model"
+import { isLoggedIn, Model, model } from "../../model"
 import { distinctUntilChanged } from "rxjs"
 import { AUTHENTICATION_SETTINGS } from "../../env"
 import { Post } from "../../feature/post"
 import { isUserInRole } from "../../auth"
-import { Hello } from "../../feature/hello"
+import _ from "lodash"
 
 class ContentComponent extends HTMLElement {
     connectedCallback() {
         model
-            .pipe(distinctUntilChanged())    
+            .pipe(distinctUntilChanged((prev, cur) => _.isEqual(prev, cur)))    
             .subscribe(model => this.render(model))
     }
     render(model: Model) {
+        console.log("render", model)
         render(template(model), this)
     }
 }
@@ -51,19 +52,17 @@ function template(model: Model) {
     const all = loggedOutTemplate()
     const loggedIn = html`
         <h2>Welcome ${user.firstName} ${user.lastName}</h2>
-        <p>${user.email} - Please log out again.</p>
+        <p>${user.email}</p>
     `
     const isUserLoggedIn = isLoggedIn(model)
     const template = isUserLoggedIn ? loggedIn : all
     const rolesTmpl = isUserLoggedIn ? rolesTemplate(user.roles) : ""
-    const greetingTmpl = greetingTemplate(model.hello)
     const postsTmpl = isUserLoggedIn ? postsTemplate(model.posts, isUserInRole(model, "editor")) : ""
     return html`
         <hgroup>
             ${template}
         </hgroup>
         ${rolesTmpl}
-        ${greetingTmpl}
         ${postsTmpl}
         `
 }
@@ -72,29 +71,19 @@ function rolesTemplate(roles: string[]) {
     return html`
         <hr/>
         <div class="container-fluid">
-            <h3>Roles</h3>
+            <h3>Your Roles</h3>
             <div class="grid">
                 ${roleTemplates}
             </div>
+            <br/>
         </div>
     `
 }
-function greetingTemplate(greeting?: Hello) {
-    return greeting ? html`
-    <hr/>
-    <div class="container-fluid">
-        <h3>Greeting</h3>
-        <p>
-            ${greeting.greeting} at ${new Date(greeting.created_at).toLocaleString()}
-        </p>
-    </div>
-    ` : html``
-}
+
 function postsTemplate(posts: Post[], isEditor: boolean) {
     const postsTemplate = posts.map(post => {
         return html`
             <tr>
-                <td>${post.id}</td>
                 <td>${post.title}</td>
                 <td class="shorten">${post.body}</td>
                 <td>${post.published}</span></td>
@@ -115,7 +104,7 @@ function postsTemplate(posts: Post[], isEditor: boolean) {
         </hgroup>
         <table>
             <thead>
-                <th>Id</th><th>Title</th><th>Body</th><th>Published</th>
+                <th>Title</th><th>Body</th><th>Published</th>
             </thead>
             <tbody>
                 ${postsTemplate}
