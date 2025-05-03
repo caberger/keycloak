@@ -1,5 +1,7 @@
 package at.ac.htl.leonding.demo.features.user;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -8,18 +10,21 @@ import at.ac.htl.leonding.demo.lib.Store;
 
 public interface UserRepository {
     static Optional<User> find(UUID id) {
-        return DataRoot.instance().users()
-            .stream()
-            .filter(user -> user.id().equals(id))
-            .findAny()
-        ;
+        return Optional.ofNullable(DataRoot.instance().users().get(id));
+    }
+    static Collection<User> all() {
+        return DataRoot.instance().users().values();
     }
     static void update(User user) {
         Store.set(store -> store.store(user));
     }
     static void add(User user) {
+        add(List.of(user));
+    }
+    static void add(Collection<User> users) {
         var root = DataRoot.instance();
-        root.users().add(user);
+        var existingUsers = root.users();
+        users.forEach(user -> existingUsers.put(user.id(), user));
         Store.set(store -> store.store(root));
     }
 }

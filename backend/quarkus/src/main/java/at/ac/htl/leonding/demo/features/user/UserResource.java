@@ -1,6 +1,5 @@
 package at.ac.htl.leonding.demo.features.user;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.eclipse.microprofile.jwt.JsonWebToken;
@@ -29,8 +28,8 @@ public class UserResource {
     JsonWebToken jwt;
 
     @GET
-    public List<User> all() {
-        return DataRoot.instance().users();
+    public Response all() {
+        return Responses.ok(DataRoot.instance().users().values());
     }
     @GET
     @Path("/i")

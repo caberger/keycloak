@@ -15,7 +15,6 @@ Content-Type: application/x-www-form-urlencoded
 client_id=frontend&username=john.doe&password=password&grant_type=password&redirect_uri=http%3A%2F%2Fwww.arge3d.at
 
 ?? body includes Bearer
-
 ###
 GET {{BASE}}/users/posts
 Authorization: Bearer {{john.access_token}}
@@ -42,3 +41,19 @@ Accept: text/csv
 GET {{BASE}}/users/i
 Authorization: Bearer {{john.access_token}}
 Accept: application/json
+###
+# @name import
+POST {{BASE}}/portation/xlsx
+Accept: application/json
+Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+
+< ./import/import.xlsx
+?? status == 200
+###
+# @name export
+GET {{BASE}}/portation/xlsx
+Accept: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+
+>> /dev/null
+?? status == 200
+###

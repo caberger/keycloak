@@ -1,8 +1,8 @@
 package at.ac.htl.leonding.demo.lib;
 
 import java.net.URI;
-
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.ResponseBuilder;
 import jakarta.ws.rs.core.StreamingOutput;
 
 public interface Responses {
@@ -12,8 +12,8 @@ public interface Responses {
     static Response ok() {
         return Response.ok().build();
     }
-    static Response ok(StreamingOutput output) {
-        return Response.ok(output).build();
+    static ResponseBuilder ok(StreamingOutput output) {
+        return Response.ok(output);
     }
     static Response created(URI location) {
         return Response.created(location).build();
@@ -29,5 +29,8 @@ public interface Responses {
     }
     static Response exists(Object entity) {
         return Response.status(Response.Status.CONFLICT).entity(entity).build();
+    }
+    static Response badRequest(Exception e) {
+        return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
     }
 }

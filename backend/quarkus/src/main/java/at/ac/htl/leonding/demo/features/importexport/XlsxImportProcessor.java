@@ -14,9 +14,9 @@ import at.ac.htl.leonding.demo.features.post.Post;
 import at.ac.htl.leonding.demo.features.user.User;
 
 interface XlsxImportProcessor {
-    sealed interface Result permits Result.Imported, Result.Failed {
-        record Imported(List<User> users) implements Result {}
-        record Failed(Exception e) implements Result {}
+    sealed interface Result permits Result.Parsed, Result.Failed {
+        record Parsed(List<User> users) implements Result {}
+        record Failed(Exception exception) implements Result {}
     }
     
     static Result parse(InputStream is) {
@@ -24,7 +24,7 @@ interface XlsxImportProcessor {
         try (var workbook = new XSSFWorkbook(is)) {
             result = UserImporter.parseUsers(workbook);
             List<User> users = switch(result) {
-                case Result.Imported imported -> imported.users();
+                case Result.Parsed imported -> imported.users();
                 case Result.Failed failed -> List.of();
             };
             if (!users.isEmpty()) {
@@ -59,7 +59,7 @@ interface UserImporter {
                 users.add(new User(UUID.fromString(id)));
             }
         }
-        return new XlsxImportProcessor.Result.Imported(users);
+        return new XlsxImportProcessor.Result.Parsed(users);
     }
 }
 interface PostsImporter {
@@ -74,22 +74,23 @@ interface PostsImporter {
         if (!rowIterator.hasNext()) {
             throw new DocumentFormatException("no header in " + SheetNames.Post.name());
         }
+        rowIterator.next(); //TODO: check headers
         while (rowIterator.hasNext()) {
             var row = rowIterator.next();
             var col = 0;
             var userId = row.getCell(col++).getStringCellValue();
             var title = row.getCell(col++).getStringCellValue();
-            var published = row.getCell(col++).getBooleanCellValue();
+            var published = row.getCell(col++).getStringCellValue();
             var body = row.getCell(col++).getStringCellValue();
             var user = userMap.get(UUID.fromString(userId));
             if (user == null) {
                 throw new POIXMLException("Post user user not found: " + userId);
             }
-            var post = new Post(title, body, published);
+            var post = new Post(title, body, published == "TRUE");
             user.posts().add(post);
         }
         var users = new ArrayList<User>(userMap.size());
         users.addAll(userMap.values());
-        return new XlsxImportProcessor.Result.Imported(users);
+        return new XlsxImportProcessor.Result.Parsed(users);
     }
 }

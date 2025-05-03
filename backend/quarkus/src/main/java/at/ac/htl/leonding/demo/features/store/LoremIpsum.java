@@ -26,7 +26,7 @@ import jakarta.inject.Inject;
 */
 @ApplicationScoped
 public class LoremIpsum {
-    static int NUMBER_OF_DUMMY_USERS_TO_CREATE = 1000;
+    static int NUMBER_OF_DUMMY_USERS_TO_CREATE = 100;
     static int NUMBER_OF_DUMMY_POSTS_PER_USER = 5;
 
     @Inject Logger log;
@@ -41,7 +41,7 @@ public class LoremIpsum {
         var users = new ArrayList<User>();
         if (!createUserId.isBlank()) {
             var user = createUser(UUID.fromString(createUserId));
-            final int additionalUsersToCreate = NUMBER_OF_DUMMY_USERS_TO_CREATE - 1;
+            final int additionalUsersToCreate = NUMBER_OF_DUMMY_USERS_TO_CREATE;
             log.log(Level.INFO, "add default user {0} and {1} more users with {2} posts for each...", createUserId, additionalUsersToCreate, NUMBER_OF_DUMMY_POSTS_PER_USER);
             users.add(user);
             IntStream
