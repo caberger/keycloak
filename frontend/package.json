@@ -1,24 +1,24 @@
 {
-    "name": "my-webpack-project",
+    "name": "aberger-keycloak",
     "version": "1.0.0",
-    "description": "My webpack project",
-    "main": "index.js",
+    "description": "keycloak demo project",
+    "source": "index.html",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "build:dev": "webpack --mode=development",
-        "build": "webpack --mode=production --node-env=production --env auth-url='http://localhost:8000' --env realm=demo --env client-id=frontend && npm audit --omit dev",
+        "build": "webpack --mode=production --node-env=production && npm audit --omit dev",
         "start": "webpack serve --env auth-url='http://localhost:8000' --env realm=demo --env client-id=frontend"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "devDependencies": {
+        "@types/keycloak-js": "^2.5.4",
         "@webpack-cli/generators": "^3.0.7",
         "clean-webpack-plugin": "^4.0.0",
         "copy-webpack-plugin": "^13.0.0",
         "css-loader": "^7.1.2",
         "html-webpack-plugin": "^5.6",
-        "mini-css-extract-plugin": "^2.9",
         "style-loader": "^4.0.0",
         "ts-loader": "^9.5.1",
         "typescript": "^5.7",
@@ -27,12 +27,8 @@
         "webpack-dev-server": "^5.1"
     },
     "dependencies": {
-        "@picocss/pico": "^2.1.1",
-        "@types/lodash": "^4.17.16",
         "immer": "^10.1.1",
         "keycloak-js": "^26.2.0",
-        "lit-html": "^3.2",
-        "lodash": "^4.17.21",
         "rxjs": "^7.8.1"
     }
 }

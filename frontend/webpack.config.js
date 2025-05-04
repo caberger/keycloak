@@ -1,17 +1,15 @@
 const path = require("path")
 const webpack = require("webpack")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
-const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const CopyWebpackPlugin = require("copy-webpack-plugin")
 
 const isProduction = process.env.NODE_ENV == 'production'
-const stylesHandler = isProduction ? MiniCssExtractPlugin.loader : 'style-loader'
 
 const config = {
     entry: './src/index.ts',
     output: {
         clean: true,
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, 'target'),
     },
     devtool: "cheap-source-map",
     devServer: {
@@ -46,10 +44,10 @@ const config = {
             template: 'index.html',
             scriptLoading: "module"
         }),
-        new MiniCssExtractPlugin(),
         new CopyWebpackPlugin({
             patterns: [
                 { from: "images", to: "images" },
+                { from: "html", to: "html" },
             ]
         })
     ],
@@ -59,10 +57,6 @@ const config = {
                 test: /\.(ts)$/i,
                 loader: 'ts-loader',
                 exclude: ['/node_modules/'],
-            },
-            {
-                test: /\.css$/i,
-                use: [stylesHandler, 'css-loader'],
             },
             {
                 test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
@@ -76,24 +70,10 @@ const config = {
 }
 
 module.exports = env => {
-    const authUrl = env["auth-url"]
-    const realm = env["realm"]
-    const clientId = env["client-id"]
-    const authSettings = {
-        url: authUrl,
-        realm,
-        clientId
-    }
-    const definePlugin = new webpack.DefinePlugin({
-        AUTHENTICATION_SETTINGS: JSON.stringify(authSettings),
-        AUTH_URL: JSON.stringify(authUrl)
-    })
     if (isProduction) {
         config.mode = 'production'
     } else {
         config.mode = 'development'
     }
-    config.plugins.push(definePlugin)
-    console.log(`building in ${config.mode} mode with authentication settings`, authSettings)
     return config
 }

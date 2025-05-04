@@ -9,7 +9,7 @@
     "inlineSources": true,
     "moduleResolution": "bundler",
     "allowJs": true,
-    "outDir": "../backend/src/main/resources/META-INF/resources/"
+    "outDir": "./target"
   },
   "files": ["src/index.ts"]
 }

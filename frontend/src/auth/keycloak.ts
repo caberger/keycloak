@@ -1,18 +1,29 @@
 import Keycloak, { KeycloakInitOptions } from "keycloak-js"
-import { AUTHENTICATION_SETTINGS } from "../env"
+import { AuthenticationSettings } from "../env"
 import { set } from "../model"
 
-const keycloak = new Keycloak(AUTHENTICATION_SETTINGS)
+
+let settings: AuthenticationSettings
+let keycloak: Keycloak
 /*
 const _ = setInterval(() => {
-    if (keycloak.authenticated) {
+    if (keycloak && keycloak.authenticated) {
         keycloak.updateToken();
         console.log("token updated", keycloak.token)
     }
 }, 30000)
 */
+
+async function authenticationSettings() {
+    const response = await fetch("./html/config.json")
+    const config = await response.json() as AuthenticationSettings
+    return config
+}
+
 /** check if the user is authenticated */
 async function checkIfUserIsAuthenticated() {
+    settings = await authenticationSettings()
+    keycloak = new Keycloak(settings)
     const initOptions: KeycloakInitOptions = {
         onLoad: "check-sso",
         enableLogging: true
@@ -56,4 +67,4 @@ async function logout() {
 function token() {
     return keycloak.token
 }
-export { checkIfUserIsAuthenticated, login, logout, token }
+export { checkIfUserIsAuthenticated, login, logout, token, authenticationSettings }

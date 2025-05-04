@@ -1,24 +1,31 @@
-import "@picocss/pico"
-import "./css/styles.css"
-import "./components/nav/login-button"
-import "./components/content/content-component"
+
+import "./components/login-button"
+import "./components/content"
+import "./components/app"
+import "./components/welcome"
+
 import { checkIfUserIsAuthenticated } from "./auth"
 import { model } from "./model/store"
 import { distinctUntilChanged, filter} from "rxjs"
 import { loadPosts } from "./feature/post"
 import { isLoggedIn } from "./model"
-import _ from "lodash"
+import { equals } from "./lib"
+import { AuthenticationSettings } from "./env"
 
-checkIfUserIsAuthenticated()
+async function start() {
+    checkIfUserIsAuthenticated()
 
-model
-    .pipe(
-        filter(model => isLoggedIn(model)),
-        filter(model => model.posts.length == 0),
-        distinctUntilChanged((prev, cur) => _.isEqual(prev, cur))
-    )
-    .subscribe(model => {
-        loadPosts()
-    })
+    model
+        .pipe(
+            filter(model => isLoggedIn(model)),
+            filter(model => model.posts.length == 0),
+            distinctUntilChanged(equals)
+        )
+        .subscribe(() => {
+            loadPosts()
+        })
+}
+
+start()
 
 

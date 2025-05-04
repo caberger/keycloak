@@ -6,7 +6,4 @@ interface AuthenticationSettings {
     clientId: string
 }
 
-declare const AUTHENTICATION_SETTINGS: AuthenticationSettings
-const authSettings = AUTHENTICATION_SETTINGS
-
-export { authSettings as AUTHENTICATION_SETTINGS}
+export { AuthenticationSettings}
