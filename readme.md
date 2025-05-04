@@ -7,13 +7,14 @@ This example shows how to secure a simple Web-Application using a REST - API tha
 
 The frontend uses lit-html to show a simple main page that displays user details and user roles from the keycloak authentication service and a greeting fetched from the backend that is secured by json web tokens received from keycloak
 
-## Backend
+## Alternatives
 
-The rust folder is a simple ORM Rest - Api implemented in rust (deprecated).
+The alternatives/rust folder is a simple ORM Rest - Api implemented in rust (deprecated).
+The vintage-frontend folde is a angular application showing how to use keycloak (deprecated),
 
-## Application server
+## backend
 
-quarkus contains an application-server implemented with quarkus. 
+backend contains an application-server implemented with quarkus. 
 
 ## Authentication and Authorization server
 
@@ -34,10 +35,9 @@ You the follwing build tools:
 - [nodejs](https://nodejs.org/)
 - maven
 
-
 To build the docker images run the following:
 ```bash
-./build.sh
+./start.sh
 ```
 
 
@@ -133,23 +133,22 @@ Simply put, privileges are assigned permissions. When you assign a permission to
 
 **So, resources expose permissions. Users have privileges**
 
-# Scopes and claims in use
+## Scopes and claims in use
 
 Scopes enable a mechanism to define what an application can do on behalf of the user. 
 When used in the authorization flows, the client sends an authorize request, including the scope or scopes or specific claims it needs (and ideally, only those it needs) to the OpenID Connect provider. This eventually results in the issuance of one or many tokens, which contains claims according to the requested scopes.
 
 Actually, it is not the authorization server that allows the application to exercise the user's privileges. The final word on granting delegated access to the application is the user's own. The user can approve or reject delegated access to their resource with specific scopes by using a consent screen
 
-## 1 Receiving Scopes
+### 1 Receiving Scopes
 When users provide consent, they may not be intending to grant consent to everything, and the application may request scopes that the user has not consented to.
 
 In such cases, the server overrides the scope request and does not provide what was asked for. However, the server must still include the scope in its response, informing the client what scope was actually issued.
 
 Therefore, it is important that the application requesting a scope (or claim) has a process in place for how to respond when what was requested is not what was received. This may include asking for additional consent, informing the user about reduced functionality, or perhaps requiring a complete re-authorization.
 ---
-# Implementation
+## Implementation
 
-## other
 ### notes
 e-paper: see waveshare e-paper on amazon
 Images sind auf office-server Projekte/key.fit/manual

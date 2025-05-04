@@ -6,7 +6,7 @@ docker compose ps
 while [ $(docker compose ps | grep keycloak | grep healthy | wc -l) -lt 1 ]
 do
     docker compose ps
-    echo "⏳..."
+    echo "⏳...🥱"
     sleep 2
 done
 docker compose logs

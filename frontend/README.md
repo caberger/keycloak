@@ -1,3 +1,15 @@
-# Two frontends using keycloak
+# 🚀 Welcome to your new awesome project!
 
-For full functionality and few dependencies see the [web-components frontend](./web-components/readme.md) subfolder here. The [vintage](./vintage/readme.md) folder demonstrates how to use keycloak with a 2nd framework.
+This project has been created using **webpack-cli**, you can now run
+
+```
+npm run build
+```
+
+or
+
+```
+yarn build
+```
+
+to bundle your application
