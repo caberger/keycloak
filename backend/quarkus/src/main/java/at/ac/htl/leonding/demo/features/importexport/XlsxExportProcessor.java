@@ -1,17 +1,12 @@
 package at.ac.htl.leonding.demo.features.importexport;
 
 import java.io.OutputStream;
-import java.time.LocalDateTime;
-import java.util.Calendar;
 import java.util.Collection;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
-import at.ac.htl.leonding.demo.features.post.Post;
 import at.ac.htl.leonding.demo.features.user.User;
 
 interface XlsxExportProcessor {

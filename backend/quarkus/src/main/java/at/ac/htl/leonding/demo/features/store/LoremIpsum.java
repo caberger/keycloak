@@ -1,95 +1,104 @@
 package at.ac.htl.leonding.demo.features.store;
 
-
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.temporal.Temporal;
-import java.time.temporal.TemporalAccessor;
-import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.config.ConfigProvider;
 
 import com.github.javafaker.Faker;
 
 import at.ac.htl.leonding.demo.features.post.Post;
 import at.ac.htl.leonding.demo.features.user.User;
 import at.ac.htl.leonding.demo.lib.Store;
-import io.quarkus.runtime.ShutdownEvent;
-import io.quarkus.runtime.StartupEvent;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.event.Observes;
-import jakarta.inject.Inject;
+
+interface DatabaseConfig {
+    /**
+     * the database parameters from our microprofile configuration
+     * (e.g. application.properties)
+     */
+    record Configuration (
+            Logger logger,
+            String createUserId,
+            String generation,
+            int additionalUsersToCreate) {
+    };
+
+    static Configuration load() {
+        var cfg = ConfigProvider.getConfig();
+        var createUserIds = cfg.getOptionalValue("store.create.user-ids", String.class);
+        var generation = cfg.getOptionalValue("store.generation", String.class);
+        var additionalUsersToCreate = cfg.getOptionalValue("store.create.number-of-test-records", Integer.class);
+
+        return new Configuration(
+                System.getLogger(Configuration.class.getName()),
+                createUserIds.isPresent() ? createUserIds.get() : "",
+                generation.isPresent() ? generation.get() : "none",
+                additionalUsersToCreate.isPresent() ? additionalUsersToCreate.get() : 0);
+    }
+}
 
 /**
  * Initialize database and create some demo records if we are in debug mode.
-*/
-@ApplicationScoped
-public class LoremIpsum {
+ */
+public interface LoremIpsum {
     static int NUMBER_OF_DUMMY_POSTS_PER_USER = 5;
-
-    @Inject Logger log;
-    @ConfigProperty(name="store.create.user-ids", defaultValue="")
-    String createUserId;
-    @ConfigProperty(name="store.generation", defaultValue = "none")
-    String generation;
-    @ConfigProperty(name="store.create.number-of-test-records", defaultValue = "0")
-    Integer additionalUsersToCreate;
-    DataRoot createRoot() {
-        return new DataRoot(demoData());
-    }
-    List<User> demoData() {
+    
+    private static Database.Root createRoot(DatabaseConfig.Configuration config) {
         var users = new ArrayList<User>();
-        if (!createUserId.isBlank()) {
+        if (!config.createUserId().isBlank()) {
             Stream.concat(
-                    Arrays.stream(createUserId.split(",")).map(UUID::fromString),
-                    IntStream.range(0, additionalUsersToCreate).mapToObj(n -> UUID.randomUUID())
-                )
-                .map(id -> createUser(id))
-                .forEach(users::add);
+                    Arrays.stream(config.createUserId().split(",")).map(UUID::fromString),
+                    IntStream.range(0, config.additionalUsersToCreate()).mapToObj(n -> UUID.randomUUID()))
+                    .map(id -> createUser(id))
+                    .forEach(users::add);
 
-            log.log(Level.INFO, "add default users {0} and {1} more users with {2} posts for each...", createUserId, additionalUsersToCreate, NUMBER_OF_DUMMY_POSTS_PER_USER);
-            var count = additionalUsersToCreate + users.size();
-            log.log(Level.INFO, "done adding {0} users with a total of {1} posts.", count, count * NUMBER_OF_DUMMY_POSTS_PER_USER);
+            config.logger().log(Level.INFO, "add default users {0} and {1} more users with {2} posts for each...", config.createUserId(),
+                    config.additionalUsersToCreate(), NUMBER_OF_DUMMY_POSTS_PER_USER);
+            var count = config.additionalUsersToCreate() + users.size();
+            config.logger().log(Level.INFO, "done adding {0} users with a total of {1} posts.", count,
+                    count * NUMBER_OF_DUMMY_POSTS_PER_USER);
         }
-        return users;
+        return new Database.Root(users);
     }
-    User createUser(UUID userId) {
+
+    private static User createUser(UUID userId) {
         var faker = Faker.instance(new Random(System.currentTimeMillis()));
         var random = faker.random();
         var user = new User(userId);
         for (var i = 0; i < NUMBER_OF_DUMMY_POSTS_PER_USER; i++) {
             var offset = random.nextInt(21 * 86400);
             var date = LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT).minusSeconds(offset);
-            user.posts().add(new Post(faker.company().catchPhrase(), faker.chuckNorris().fact(), random.nextBoolean(), date));
+            user.posts().add(
+                    new Post(faker.company().catchPhrase(), faker.chuckNorris().fact(), random.nextBoolean(), date));
         }
         return user;
     }
-    void onInit(@Observes StartupEvent ev) {
-        if (generation.equals("drop-and-create")) {
-            log.log(Level.INFO, "store.generation={0} found in configuration, dropping database", generation);
+
+    static void start() {
+        var config = DatabaseConfig.load();
+        if (config.generation().equals("drop-and-create")) {
+            config.logger().log(Level.INFO, "store.generation={0} found in configuration, dropping database", config.generation());
             Store.drop();
         }
-        if (DataRoot.instance() == null) {
-            log.log(Level.INFO, "empty database found, create new");
-            final var initialRoot = createRoot();
+        if (Database.root() == null) {
+            config.logger().log(Level.INFO, "empty database found, create new");
+            final var initialRoot = createRoot(config);
             Store.set(manager -> {
                 manager.setRoot(initialRoot);
                 manager.storeRoot();
             });
         }
     }
-    void shutdown(@Observes ShutdownEvent event) {
+    static void shutdown() {
         Store.shutdown();
     }
 }

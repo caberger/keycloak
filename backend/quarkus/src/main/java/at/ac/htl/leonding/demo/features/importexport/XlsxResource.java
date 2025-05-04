@@ -18,11 +18,11 @@ import jakarta.ws.rs.core.Response;
 
 @Path("/portation/xlsx")
 @PermitAll // remove this!
-
 public class XlsxResource {
     public static final String MEDIA_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     @Inject
     Logger log;
+
     @GET
     @Produces(MEDIA_TYPE)
     public Response export() {

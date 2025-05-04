@@ -9,6 +9,7 @@
     "inlineSources": true,
     "moduleResolution": "bundler",
     "allowJs": true,
+    "outDir": "./target"
   },
   "files": ["src/index.ts"]
 }

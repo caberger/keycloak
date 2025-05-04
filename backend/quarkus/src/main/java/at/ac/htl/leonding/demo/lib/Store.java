@@ -15,48 +15,48 @@ import org.eclipse.store.storage.types.Storage;
 import org.eclipse.store.storage.types.StorageChannelCountProvider;
 import org.eclipse.store.storage.types.StorageConfiguration;
 
-class EmbeddedStore {
+class StoreHolder {
     static EmbeddedStorageManager storageManager;
     static final String BASE_FOLDER = "storage";
     static final int CHANNEL_COUNT = 4;
 }
-public interface Store {
-    static String storageFolder() {
-        return EmbeddedStore.BASE_FOLDER;
-    }
-    static EmbeddedStorageManager instance() {
-        if (EmbeddedStore.storageManager == null) {
-            var folder = NioFileSystem.New().ensureDirectoryPath(storageFolder());
-            var foundation = EmbeddedStorageFoundation.New();
-            foundation.setConfiguration(StorageConfiguration.Builder()
-                .setStorageFileProvider(
-                    Storage.FileProvider(folder)
-                )
-                .setChannelCountProvider(StorageChannelCountProvider.New(EmbeddedStore.CHANNEL_COUNT))
-                .createConfiguration()
-            );
-            
-            foundation.onConnectionFoundation(connectionFoundation -> {
-                connectionFoundation
-                    .setClassLoaderProvider(ClassLoaderProvider.New(Thread.currentThread().getContextClassLoader()))
-                ;
-            });
 
-            EmbeddedStore.storageManager = foundation.createEmbeddedStorageManager().start();
+public interface Store {
+    static EmbeddedStorageManager instance() {
+        if (StoreHolder.storageManager == null) {
+            StoreHolder.storageManager = createInstance();
         }
-        return EmbeddedStore.storageManager;
+        return StoreHolder.storageManager;
+    }
+    private static EmbeddedStorageManager createInstance() {
+        var folder = NioFileSystem.New().ensureDirectoryPath(StoreHolder.BASE_FOLDER);
+        var foundation = EmbeddedStorageFoundation.New();
+        foundation.setConfiguration(StorageConfiguration.Builder()
+            .setStorageFileProvider(
+                Storage.FileProvider(folder)
+            )
+            .setChannelCountProvider(StorageChannelCountProvider.New(StoreHolder.CHANNEL_COUNT))
+            .createConfiguration()
+        );
+        
+        foundation.onConnectionFoundation(connectionFoundation -> {
+            connectionFoundation
+                .setClassLoaderProvider(ClassLoaderProvider.New(Thread.currentThread().getContextClassLoader()))
+            ;
+        });
+        return foundation.createEmbeddedStorageManager().start();
     }
     static Object root() {
         return instance().root();
     }
     static void shutdown() {
-        if (EmbeddedStore.storageManager != null) {
-            EmbeddedStore.storageManager.shutdown();
-            EmbeddedStore.storageManager = null;
+        if (StoreHolder.storageManager != null) {
+            StoreHolder.storageManager.shutdown();
+            StoreHolder.storageManager = null;
         }
     }
     static void drop() {
-        final var storage = Path.of(storageFolder());
+        final var storage = Path.of(StoreHolder.BASE_FOLDER);
         if (Files.exists(storage)) {
             try (var paths = Files.walk(storage)) {
                 paths
@@ -73,7 +73,6 @@ public interface Store {
             }   
         }
     }
-
     static void set(Consumer<EmbeddedStorageManager> recipe) {
         XThreads.executeSynchronized(() -> {
             recipe.accept(instance());
