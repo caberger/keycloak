@@ -10,7 +10,6 @@ import { distinctUntilChanged, filter} from "rxjs"
 import { loadPosts } from "./feature/post"
 import { isLoggedIn } from "./model"
 import { equals } from "./lib"
-import { AuthenticationSettings } from "./env"
 
 async function start() {
     checkIfUserIsAuthenticated()

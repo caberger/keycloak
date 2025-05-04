@@ -12,10 +12,7 @@ pushd compose
 popd
 
 pushd ./frontend
-    echo "install frontend dependencies..."
-    npm install 2>&1 > /dev/null
-    npm audit --omit dev
-    npm run build
+    ./build.sh
 popd
 
 pushd ./backend
@@ -29,7 +26,7 @@ pushd ./compose
 popd
 
 echo "==="
-echo "= docker compose is started."
+echo "= docker compose started."
 echo "= 1.) open a new terminal in $PWD/backend and run: → ${bold}./start.sh${normal}"
 echo "= you can start the application at http://localhost:8080"
 echo "= 2.) for frontend development on http://localhost:4200 you can open a new terminal in $PWD/frontend and run: → ${bold}npm start${normal}"

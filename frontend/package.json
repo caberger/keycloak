@@ -4,24 +4,17 @@
     "description": "keycloak demo project",
     "source": "index.html",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "build:dev": "webpack --mode=development",
-        "build": "webpack --mode=production --node-env=production && npm audit --omit dev",
-        "start": "webpack serve --env auth-url='http://localhost:8000' --env realm=demo --env client-id=frontend"
+        "start": "vite",
+        "build": "vite build",
+        "preview": "vite preview"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "devDependencies": {
         "@types/keycloak-js": "^2.5.4",
-        "@webpack-cli/generators": "^3.0.7",
-        "clean-webpack-plugin": "^4.0.0",
-        "copy-webpack-plugin": "^13.0.0",
-        "css-loader": "^7.1.2",
-        "html-webpack-plugin": "^5.6",
-        "style-loader": "^4.0.0",
-        "ts-loader": "^9.5.1",
         "typescript": "^5.7",
+        "vite": "^6.3.4",
         "webpack": "^5.97",
         "webpack-cli": "^6.0.1",
         "webpack-dev-server": "^5.1"

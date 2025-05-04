@@ -8,3 +8,5 @@ export interface User {
     readonly token?: string
     readonly roles: string[]
 }
+
+//export type { User }

@@ -1,4 +1,4 @@
-import { User } from "./user"
+import type { User } from "./user"
 
 import { Post } from "../feature/post"
 
@@ -9,4 +9,6 @@ interface Model {
     posts: Post[]
 }
 const isLoggedIn = (model: Model) => !!model.token
-export { Model, isLoggedIn }
+
+export type { Model }
+export { isLoggedIn }

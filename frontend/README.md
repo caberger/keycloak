@@ -1,15 +1,7 @@
-# 🚀 Welcome to your new awesome project!
+# Frontend example using keycloak
 
-This project has been created using **webpack-cli**, you can now run
-
-```
-npm run build
-```
-
-or
-
-```
-yarn build
+## starting
+```bash
+npm start
 ```
 
-to bundle your application
