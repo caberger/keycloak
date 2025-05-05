@@ -1,4 +1,4 @@
-package at.ac.htl.leonding.demo;
+package at.ac.htl.leonding.demo.main;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.websocket.OnClose;

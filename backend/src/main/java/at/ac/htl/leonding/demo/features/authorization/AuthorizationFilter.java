@@ -6,6 +6,7 @@ import java.lang.System.Logger.Level;
 import java.util.UUID;
 
 import org.eclipse.microprofile.jwt.JsonWebToken;
+
 import at.ac.htl.leonding.demo.features.user.User;
 import at.ac.htl.leonding.demo.features.user.UserRepository;
 import jakarta.annotation.Priority;

@@ -8,6 +8,7 @@ import java.util.UUID;
 import at.ac.htl.leonding.demo.features.store.Database;
 import at.ac.htl.leonding.demo.lib.Store;
 
+
 public interface UserRepository {
     static Optional<User> find(UUID id) {
         return Optional.ofNullable(Database.root().users().get(id));

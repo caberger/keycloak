@@ -10,6 +10,7 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
 import at.ac.htl.leonding.demo.features.user.User;
 
+
 interface XlsxExportProcessor {
     static Consumer<OutputStream> export(Collection<User> users) {
         return new Exporter(users);

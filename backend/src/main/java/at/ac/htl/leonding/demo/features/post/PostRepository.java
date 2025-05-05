@@ -1,5 +1,4 @@
 package at.ac.htl.leonding.demo.features.post;
-
 import java.util.List;
 
 import at.ac.htl.leonding.demo.features.store.Database;

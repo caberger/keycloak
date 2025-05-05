@@ -14,6 +14,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import at.ac.htl.leonding.demo.features.post.Post;
 import at.ac.htl.leonding.demo.features.user.User;
 
+
 interface XlsxImportProcessor {
     sealed interface Result permits Result.Success, Result.Failed {
         record Success(List<User> users) implements Result {}

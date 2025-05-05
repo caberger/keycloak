@@ -1,4 +1,4 @@
-package at.ac.htl.leonding.demo;
+package at.ac.htl.leonding.demo.main;
 
 
 import at.ac.htl.leonding.demo.features.store.LoremIpsum;
