@@ -42,7 +42,7 @@ function render(this: ContentComponent, vm: ViewModel) {
         var text = `<td>${post.title}</td><td>${post.body}</td><td>${post.published ? '👍' : '✋'}`
         var row = tbody.insertRow()
         row.innerHTML = text
-        row.onclick = () => alert(`post ${post.title} selected`)
+        row.onclick = () => alert(`a Post has been selected. Title: "${post.title}"`)
     })
     const rolesContainer = this.querySelector(".grid") as HTMLDivElement
     rolesContainer.innerHTML = ""

@@ -92,4 +92,3 @@ You can adjust the number of records created at startup in by changing *store.cr
 
 You can export and import the database to a LibreOffice/Excel workbook with the import/export buttons in the frontend.
 Note the performance 😲🤩
-

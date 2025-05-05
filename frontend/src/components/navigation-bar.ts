@@ -3,6 +3,7 @@ import { distinctUntilChanged, map } from "rxjs"
 import { headers, login, logout } from "../auth"
 import { html } from "../lib"
 import { isLoggedIn, model } from "../model"
+import { loadPosts } from "../feature/post"
 
 const XLSX_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 
@@ -41,7 +42,7 @@ class NavigationBarElement extends HTMLElement {
         const input = e.target as HTMLInputElement
         if (input.files.length > 0) {
             const file = input.files[0]
-            const yes = confirm(`do your really want to import ${file.name}`)
+            const yes = confirm(`do your really want to import ${file.name} ?`)
             if (yes) {
                 const response = await fetch("/api/portation/xlsx", {
                     method: "POST",
@@ -51,6 +52,7 @@ class NavigationBarElement extends HTMLElement {
                 if (response.ok) {
                     alert("import done")
                 }
+                loadPosts()
                 this.dialog.close()
             }
         }
@@ -61,7 +63,6 @@ class NavigationBarElement extends HTMLElement {
     get uploadInput() {
         return this.dialog.querySelector("input")
     }
-    
 }
 customElements.define("navigation-bar", NavigationBarElement)
 
