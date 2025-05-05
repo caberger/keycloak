@@ -12,7 +12,7 @@ interface ViewModel {
 
 class ContentComponent extends HTMLElement {
     async connectedCallback() {
-        this.innerHTML = await html("content.html")
+        this.innerHTML = await html("content")
         model
             .pipe(
                 map(toViewModel),

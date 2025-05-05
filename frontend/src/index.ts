@@ -1,5 +1,5 @@
 
-import "./components/login-button"
+import "./components/navigation-bar"
 import "./components/content"
 import "./components/app"
 import "./components/welcome"
