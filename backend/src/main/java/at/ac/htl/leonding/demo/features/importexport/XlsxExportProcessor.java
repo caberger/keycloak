@@ -1,9 +1,10 @@
 package at.ac.htl.leonding.demo.features.importexport;
 
 import java.io.OutputStream;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.util.Collection;
 import java.util.function.Consumer;
-import java.util.stream.IntStream;
 
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
@@ -16,6 +17,7 @@ interface XlsxExportProcessor {
 }
 class Exporter implements Consumer<OutputStream> {
     final Collection<User> users;
+    final Logger log = System.getLogger(Exporter.class.getName());
 
     Exporter(Collection<User> someUsersThatShouldBeExported) {
         users = someUsersThatShouldBeExported;
@@ -23,12 +25,13 @@ class Exporter implements Consumer<OutputStream> {
     @Override
     public void accept(OutputStream os) {
         try (var workbook = new SXSSFWorkbook()) {
-            export(workbook, os);
+            export(workbook);
+            workbook.write(os);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
-    void export(SXSSFWorkbook workbook, OutputStream os) throws Exception {
+    void export(SXSSFWorkbook workbook) throws Exception {
         var font = workbook.createFont();
         font.setFontHeightInPoints((short) 15);
         font.setBold(true);
@@ -62,7 +65,6 @@ class Exporter implements Consumer<OutputStream> {
             it.next().setCellStyle(boldStyle);
         }
         
-        var postColumns = 0; 
         for (var user: users) {
             var userId = user.id().toString();
             var userRow = userSheet.createRow(userIndex++);
@@ -75,19 +77,20 @@ class Exporter implements Consumer<OutputStream> {
                 postRow.createCell(postColumIndex++).setCellValue(post.title());
                 postRow.createCell(postColumIndex++).setCellValue(post.published() ? "TRUE" : "FALSE");
                 postRow.createCell(postColumIndex++).setCellValue(post.body());
-                if (post.createdAt() == null) {
-                    throw new RuntimeException("date must not be null"); 
+                var date = post.createdAt();
+                if (date == null) {
+                    log.log(Level.INFO, "date must not be null {0} {1}", user.id(), post.title()); 
                 }
-                var dt = Formatters.dateFormatter.format(post.createdAt());
+                var dt = Formatters.dateFormatter.format(date);
+                if (dt == null) {
+                    throw new RuntimeException("failed to format date, must not be null"); 
+                }
                 postRow.createCell(postColumIndex++).setCellValue(dt);
-                postColumns = postColumIndex;
             }
         }
         userSheet.trackAllColumnsForAutoSizing();
         postsSheet.trackAllColumnsForAutoSizing();
         userSheet.autoSizeColumn(0);
-        IntStream.range(0, postColumns).forEach(col -> postsSheet.autoSizeColumn(col));
-        workbook.write(os);
-        os.flush();
+        //IntStream.range(0, postColumns).forEach(col -> postsSheet.autoSizeColumn(col));
     }
  }
