@@ -5,17 +5,21 @@ import java.lang.System.Logger.Level;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
+import java.util.function.Supplier;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.eclipse.microprofile.config.ConfigProvider;
+import org.eclipse.serializer.collections.lazy.LazyHashMap;
 
 import com.github.javafaker.Faker;
 
+import at.ac.htl.leonding.demo.features.category.Category;
 import at.ac.htl.leonding.demo.features.post.Post;
 import at.ac.htl.leonding.demo.features.user.User;
 import at.ac.htl.leonding.demo.lib.Store;
@@ -53,13 +57,17 @@ public interface LoremIpsum {
     static int NUMBER_OF_DUMMY_POSTS_PER_USER = 5;
     
     private static Database.Root createRoot(DatabaseConfig.Configuration config) {
-        var users = new ArrayList<User>();
+        Map<UUID, User> users = new LazyHashMap<>();
+        Map<String, Category> categories = new LazyHashMap<>();
+
         if (!config.createUserId().isBlank()) {
+            var randomCategories = createCategories();
+            randomCategories.forEach(category -> categories.put(category.name(), category));
             Stream.concat(
                     Arrays.stream(config.createUserId().split(",")).map(UUID::fromString),
                     IntStream.range(0, config.additionalUsersToCreate()).mapToObj(n -> UUID.randomUUID()))
-                    .map(id -> createUser(id))
-                    .forEach(users::add);
+                    .map(id -> createUser(id, randomCategories))
+                    .forEach(user -> users.put(user.id(), user));
 
             config.logger().log(Level.INFO, "add default users {0} and {1} more users with {2} posts for each...", config.createUserId(),
                     config.additionalUsersToCreate(), NUMBER_OF_DUMMY_POSTS_PER_USER);
@@ -67,18 +75,33 @@ public interface LoremIpsum {
             config.logger().log(Level.INFO, "done adding {0} users with a total of {1} posts.", count,
                     count * NUMBER_OF_DUMMY_POSTS_PER_USER);
         }
-        return new Database.Root(users);
+        return new Database.Root(users, categories);
     }
+    private static List<Category> createCategories() {
+        var faker = Faker.instance(new Random(System.currentTimeMillis()));
 
-    private static User createUser(UUID userId) {
+        return IntStream
+            .range(0, 5 * NUMBER_OF_DUMMY_POSTS_PER_USER)
+            .mapToObj(n -> new Category(faker.book().genre(), faker.ancient().hero()))
+            .toList();
+ }
+    private static User createUser(UUID userId, List<Category> randomCategories) {
         var faker = Faker.instance(new Random(System.currentTimeMillis()));
         var random = faker.random();
         var user = new User(userId);
+        var generator = new Random();
+        Supplier<Category> randomCategory = () -> {
+            var index = generator.nextInt();
+            index = (index < 0 ? -index : index) % randomCategories.size();
+            return randomCategories.get(index);
+        };
+
         for (var i = 0; i < NUMBER_OF_DUMMY_POSTS_PER_USER; i++) {
             var offset = random.nextInt(21 * 86400);
+            offset = offset < 0 ? -offset : offset;
             var date = LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT).minusSeconds(offset);
-            user.posts().add(
-                    new Post(faker.company().catchPhrase(), faker.chuckNorris().fact(), random.nextBoolean(), date));
+            var post = new Post(faker.company().catchPhrase(), faker.chuckNorris().fact(), random.nextBoolean(), date, randomCategory.get());
+            user.posts().add(post);
         }
         return user;
     }

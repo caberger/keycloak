@@ -12,9 +12,9 @@
             "type": "java",
             "name": "application-server",
             "request": "launch",
-            "mainClass": "at.ac.htl.leonding.demo.Main",
+            "mainClass": "at.ac.htl.leonding.demo.main.Main",
             "projectName": "backend",
-            "cwd": "${workspaceFolder}/backend/quarkus",
+            "cwd": "${workspaceFolder}/backend",
             "vmArgs": [
                 "--add-exports", "java.base/jdk.internal.misc=ALL-UNNAMED"
             ]

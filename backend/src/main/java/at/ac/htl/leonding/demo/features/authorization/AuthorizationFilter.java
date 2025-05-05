@@ -17,9 +17,8 @@ import jakarta.ws.rs.container.ContainerRequestFilter;
 import jakarta.ws.rs.ext.Provider;
 
 /**
- * Users are created by keycloak.
- * In this filter we see if we meet a new Users.
- * If so, they have already been authenticated by keycloak, so we trust and welcome them in our database.
+ * Users are created by keycloak and when we see them for the first time we store them.
+ * If we see such users, they have already been authenticated by keycloak, so we trust and welcome them in our database.
  */
 @Provider
 @Priority(Priorities.USER)

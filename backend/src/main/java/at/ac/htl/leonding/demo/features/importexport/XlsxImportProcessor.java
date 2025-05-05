@@ -11,6 +11,7 @@ import org.apache.poi.ooxml.POIXMLException;
 import org.apache.poi.util.DocumentFormatException;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import at.ac.htl.leonding.demo.features.category.Category;
 import at.ac.htl.leonding.demo.features.post.Post;
 import at.ac.htl.leonding.demo.features.user.User;
 
@@ -62,6 +63,7 @@ interface UserImporter {
 }
 interface PostsImporter {
     static XlsxImportProcessor.Result parse(XSSFWorkbook workbook, List<User> userList) {
+        var defaultCategory = new Category("not yet", "ready");
         var userMap = new HashMap<UUID, User>();
         userList.forEach(user -> userMap.put(user.id(), user));
         var sheet = workbook.getSheet(SheetNames.Post.name());
@@ -94,7 +96,7 @@ interface PostsImporter {
             if (date == null) {
                 throw new DocumentFormatException("date must not be null");
             }
-            var post = new Post(title, body, published == "TRUE", date);
+            var post = new Post(title, body, published == "TRUE", date, defaultCategory);
             
             user.posts().add(post);
             lineNumber++;
