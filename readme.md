@@ -29,7 +29,12 @@ For motivation see [Storage](https://docs.eclipsestore.io/manual/storage/index.h
 
 ## Building
 
-Building is supported on Linux and OSX.
+Docker must be started and clean. To make sure that no old caches and databases exist run the following:
+```bash
+./compose/clean-docker.sh
+```
+
+Builds are supported on Linux and OSX.
 
 You the follwing build tools:
 - [nodejs](https://nodejs.org/)

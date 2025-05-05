@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
-docker compose down
+
+pushd cd "$(dirname "$0")"
+    docker compose down
+popd
 docker container prune -f
 docker image prune -f
 docker volume prune -f
