@@ -7,7 +7,6 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 import at.ac.htl.leonding.demo.features.post.Post;
 import at.ac.htl.leonding.demo.features.post.PostMapper;
 import at.ac.htl.leonding.demo.lib.Responses;
-import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.DELETE;
@@ -21,7 +20,6 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
 
 @Path("/users")
-@PermitAll // for easier debugging, must be removed when debugging is done.
 @Produces({MediaType.APPLICATION_JSON, "text/csv"})
 public class UserResource {
     @Inject
@@ -33,11 +31,13 @@ public class UserResource {
     }
     @GET
     @Path("/i")
+    @RolesAllowed({"customer"})
     public Response me() {
         return Responses.ok(UserMapper.toResource(user()));
     }
     @GET
     @Path("/posts")
+    @RolesAllowed({"admin", "customer"})
     public Response allPosts() {
         return Responses.ok(PostMapper.toResource(user().posts()));
     }
