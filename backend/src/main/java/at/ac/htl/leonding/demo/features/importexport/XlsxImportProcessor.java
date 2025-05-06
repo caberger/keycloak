@@ -96,7 +96,7 @@ interface PostsImporter {
             if (date == null) {
                 throw new DocumentFormatException("date must not be null");
             }
-            var post = new Post(title, body, published == "TRUE", date, defaultCategory);
+            var post = new Post(user, title, body, published == "TRUE", date, defaultCategory);
             
             user.posts().add(post);
             lineNumber++;

@@ -12,7 +12,12 @@ import jakarta.ws.rs.core.Response;
 @Produces({MediaType.APPLICATION_JSON, CsvMessageBodyProvider.MEDIA_TYPE})
 public class PostResource {
     @GET
+    @Path("/published")
     public Response published() {
-        return Responses.ok(PostRepository.allPublishedPosts());
-    }    
+        return Responses.ok(PostMapper.toResource(PostRepository.allPublishedPosts()));
+    }
+    @GET
+    public Response all() {
+        return Responses.ok(PostMapper.toResource(PostRepository.all()));
+    }   
 }

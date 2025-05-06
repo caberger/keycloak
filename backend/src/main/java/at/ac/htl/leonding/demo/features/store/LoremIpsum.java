@@ -56,6 +56,9 @@ interface DatabaseConfig {
 public interface LoremIpsum {
     static int NUMBER_OF_DUMMY_POSTS_PER_USER = 5;
     
+    private static Logger log() {
+        return System.getLogger(LoremIpsum.class.getName());
+    }
     private static Database.Root createRoot(DatabaseConfig.Configuration config) {
         Map<UUID, User> users = new LazyHashMap<>();
         Map<String, Category> categories = new LazyHashMap<>();
@@ -71,7 +74,7 @@ public interface LoremIpsum {
 
             config.logger().log(Level.INFO, "add default users {0} and {1} more users with {2} posts for each...", config.createUserId(),
                     config.additionalUsersToCreate(), NUMBER_OF_DUMMY_POSTS_PER_USER);
-            var count = config.additionalUsersToCreate() + users.size();
+            var count = users.size();
             config.logger().log(Level.INFO, "done adding {0} users with a total of {1} posts.", count,
                     count * NUMBER_OF_DUMMY_POSTS_PER_USER);
         }
@@ -100,7 +103,7 @@ public interface LoremIpsum {
             var offset = random.nextInt(21 * 86400);
             offset = offset < 0 ? -offset : offset;
             var date = LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT).minusSeconds(offset);
-            var post = new Post(faker.company().catchPhrase(), faker.chuckNorris().fact(), Boolean.valueOf(generator.nextInt() > 0), date, randomCategory.get());
+            var post = new Post(user, faker.company().catchPhrase(), faker.chuckNorris().fact(), generator.nextInt() > 0, date, randomCategory.get());
             user.posts().add(post);
         }
         return user;
@@ -114,11 +117,16 @@ public interface LoremIpsum {
         }
         if (Database.root() == null) {
             config.logger().log(Level.INFO, "empty database found, create new");
+            final long now = System.currentTimeMillis();
             final var initialRoot = createRoot(config);
             Store.set(manager -> {
                 manager.setRoot(initialRoot);
                 manager.storeRoot();
             });
+            long diff = System.currentTimeMillis() - now;
+            var userSize = initialRoot.users().size();
+            var recordCount = userSize * NUMBER_OF_DUMMY_POSTS_PER_USER + initialRoot.categories().size(); 
+            log().log(Level.INFO, "Database inserts for {0} the users with a total of {1} posts took {2}s", userSize, recordCount, diff / 1000.0);
         }
     }
     static void shutdown() {

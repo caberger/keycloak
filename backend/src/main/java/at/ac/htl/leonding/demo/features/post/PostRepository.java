@@ -1,26 +1,31 @@
 package at.ac.htl.leonding.demo.features.post;
-import java.util.List;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.function.Predicate;
+
+import at.ac.htl.leonding.demo.features.category.Category;
 import at.ac.htl.leonding.demo.features.store.Database;
 
 public interface PostRepository {
 
-    record PostDto(String userId, Post post) {
-    }
-
-    static List<PostDto> allPublishedPosts() {
+    static List<Post> loadFilteredPosts(Predicate<Post> filter) {
         final var descending = -1;
         return Database.root()
                 .users()
                 .values()
                 .stream()
-                .map(
-                        user -> user.posts().stream()
-                                .filter(Post::published)
-                                .map(post -> new PostDto(user.id().toString(), post)).toList())
+                .map(user -> user.posts().stream().filter(filter).toList())
                 .flatMap(List::stream)
-                .peek(post -> System.out.println(post.post().published()))
-                .sorted((l, r) -> descending * l.post().createdAt().compareTo(r.post().createdAt()))
+                .sorted((l, r) -> descending * l.createdAt().compareTo(r.createdAt()))
                 .toList();
+    }
+
+    static List<Post> allPublishedPosts() {
+        return loadFilteredPosts(Post::published);
+    }
+
+    static List<Post> all() {
+        return loadFilteredPosts(post -> true);
     }
 }

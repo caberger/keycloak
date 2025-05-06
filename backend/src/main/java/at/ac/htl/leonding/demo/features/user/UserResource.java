@@ -5,7 +5,7 @@ import java.util.UUID;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import at.ac.htl.leonding.demo.features.post.Post;
-import at.ac.htl.leonding.demo.features.store.Database;
+import at.ac.htl.leonding.demo.features.post.PostMapper;
 import at.ac.htl.leonding.demo.lib.Responses;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
@@ -29,17 +29,17 @@ public class UserResource {
 
     @GET
     public Response all() {
-        return Responses.ok(Database.root().users().values());
+        return Responses.ok(UserMapper.toResource(UserRepository.all()));
     }
     @GET
     @Path("/i")
     public Response me() {
-        return Responses.ok(user());
+        return Responses.ok(UserMapper.toResource(user()));
     }
     @GET
     @Path("/posts")
     public Response allPosts() {
-        return Responses.ok(user().posts());
+        return Responses.ok(PostMapper.toResource(user().posts()));
     }
     @PUT
     @Path("/posts")
