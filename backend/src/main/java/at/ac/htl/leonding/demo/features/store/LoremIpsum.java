@@ -100,7 +100,7 @@ public interface LoremIpsum {
             var offset = random.nextInt(21 * 86400);
             offset = offset < 0 ? -offset : offset;
             var date = LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT).minusSeconds(offset);
-            var post = new Post(faker.company().catchPhrase(), faker.chuckNorris().fact(), random.nextBoolean(), date, randomCategory.get());
+            var post = new Post(faker.company().catchPhrase(), faker.chuckNorris().fact(), Boolean.valueOf(generator.nextInt() > 0), date, randomCategory.get());
             user.posts().add(post);
         }
         return user;

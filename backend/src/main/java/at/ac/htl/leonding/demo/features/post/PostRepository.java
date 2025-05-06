@@ -19,6 +19,7 @@ public interface PostRepository {
                                 .filter(Post::published)
                                 .map(post -> new PostDto(user.id().toString(), post)).toList())
                 .flatMap(List::stream)
+                .peek(post -> System.out.println(post.post().published()))
                 .sorted((l, r) -> descending * l.post().createdAt().compareTo(r.post().createdAt()))
                 .toList();
     }

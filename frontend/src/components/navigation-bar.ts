@@ -9,19 +9,19 @@ const XLSX_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.spreads
 
 class NavigationBarElement extends HTMLElement {
     async connectedCallback() {
-        this.innerHTML = await html("navigation-bar"    )
-        const find = getByName.bind(this)
+        this.innerHTML = await html("navigation-bar")
 
-        const downloadButton = find("download-button")
+        const downloadButton = this.button("download-button")
         downloadButton.onclick = () => window.open("/api/portation/xlsx")
 
-        const uploadButton = find("upload-button")
+        const uploadButton = this.button("upload-button")
         uploadButton.onclick = () => this.dialog.showModal()
-        
+
         const input = this.uploadInput
-        input.onchange = e => this.upload(e)
+        input.onchange = e => this.uploadImportFile(e)
         input.accept = XLSX_CONTENT_TYPE
-        const loginButton = find('login-button')
+        const loginButton = this.button('login-button')
+        const buttonsThatAreOnlyVisibleWhenAuthorized = [uploadButton, downloadButton]
 
         model.
             pipe(
@@ -29,16 +29,15 @@ class NavigationBarElement extends HTMLElement {
                 distinctUntilChanged()
             )
             .subscribe(isLoggedIn => {
-                const {title, icon} = isLoggedIn ? {title: "Logout", icon: "logout"} : {title: "Login", icon: "person"}
+                const { title, icon } = isLoggedIn ? { title: "Logout", icon: "logout" } : { title: "Login", icon: "person" }
                 loginButton.title = title
                 loginButton.innerText = icon
                 loginButton.onclick = isLoggedIn ? logout : login
 
-                const uploadDownloadHidden = !isLoggedIn
-                downloadButton.hidden = uploadDownloadHidden
-        })
+                buttonsThatAreOnlyVisibleWhenAuthorized.forEach(button => button.hidden = !isLoggedIn)
+            })
     }
-    async upload(e: Event){
+    async uploadImportFile(e: Event) {
         const input = e.target as HTMLInputElement
         if (input.files.length > 0) {
             const file = input.files[0]
@@ -46,11 +45,15 @@ class NavigationBarElement extends HTMLElement {
             if (yes) {
                 const response = await fetch("/api/portation/xlsx", {
                     method: "POST",
-                    headers: {...headers(), "content-type": XLSX_CONTENT_TYPE},
+                    headers: { ...headers(), "content-type": XLSX_CONTENT_TYPE },
                     body: file
                 })
                 if (response.ok) {
                     alert("import done")
+                } else {
+                    const error = await response.json()
+                    console.error("upload failed", error)
+                    alert(`Upload failed: ${response.statusText}`)
                 }
                 loadPosts()
                 this.dialog.close()
@@ -63,6 +66,10 @@ class NavigationBarElement extends HTMLElement {
     get uploadInput() {
         return this.dialog.querySelector("input")
     }
+    button(name: string) {
+        return this.querySelector(`[name='${name}']`) as HTMLElement;
+    }
+    
 }
 customElements.define("navigation-bar", NavigationBarElement)
 

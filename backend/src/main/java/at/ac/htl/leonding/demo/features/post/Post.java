@@ -7,7 +7,7 @@ import at.ac.htl.leonding.demo.features.category.Category;
 public record Post(
     String title,
     String body,
-    boolean published,
+    Boolean published,
     LocalDateTime createdAt,
     Category category
 ) {
