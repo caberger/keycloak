@@ -6,6 +6,7 @@ import jakarta.ws.rs.core.Response.ResponseBuilder;
 import jakarta.ws.rs.core.StreamingOutput;
 
 public interface Responses {
+    record ExceptionInfo(String message) {}
     static Response ok(Object entity) {
         return Response.ok(entity).build();
     }
@@ -31,6 +32,6 @@ public interface Responses {
         return Response.status(Response.Status.CONFLICT).entity(entity).build();
     }
     static Response badRequest(Exception e) {
-        return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
+        return Response.status(Response.Status.BAD_REQUEST).entity(new ExceptionInfo(e.getMessage())).build();
     }
 }

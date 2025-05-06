@@ -1,10 +1,8 @@
 package at.ac.htl.leonding.demo.features.post;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Predicate;
 
-import at.ac.htl.leonding.demo.features.category.Category;
 import at.ac.htl.leonding.demo.features.store.Database;
 
 public interface PostRepository {

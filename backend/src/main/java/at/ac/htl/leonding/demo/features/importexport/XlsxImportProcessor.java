@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,17 +19,17 @@ import at.ac.htl.leonding.demo.features.user.User;
 
 interface XlsxImportProcessor {
     sealed interface Result permits Result.Success, Result.Failed {
-        record Success(List<User> users) implements Result {}
+        record Success(List<User> users, List<Category> categories) implements Result {}
         record Failed(Exception exception) implements Result {}
     }
     
     static Result parse(InputStream is) {
         Result result;
         try (var workbook = new XSSFWorkbook(is)) {
-            result = UserImporter.parseUsers(workbook);
-            if (result instanceof Result.Success success) {
-                result = PostsImporter.parse(workbook, success.users());
-            }
+            var categories = CategoryImporter.parseCategories(workbook);
+            var users = UserImporter.parseUsers(workbook);
+            PostsImporter.parse(workbook, users, categories);
+            result = new Result.Success(users, categories);
         } catch (Exception e) {
             result = new XlsxImportProcessor.Result.Failed(e);
         }
@@ -37,7 +38,7 @@ interface XlsxImportProcessor {
 }
 
 interface UserImporter {
-    static XlsxImportProcessor.Result parseUsers(XSSFWorkbook workbook) {
+    static List<User> parseUsers(XSSFWorkbook workbook) {
         var sheet = workbook.getSheet(SheetNames.User.name());
         if (sheet == null) {
             throw new DocumentFormatException("no such sheet: " + SheetNames.User.name());
@@ -58,14 +59,15 @@ interface UserImporter {
                 users.add(new User(UUID.fromString(id)));
             }
         }
-        return new XlsxImportProcessor.Result.Success(users);
+        return users;
     }
 }
 interface PostsImporter {
-    static XlsxImportProcessor.Result parse(XSSFWorkbook workbook, List<User> userList) {
-        var defaultCategory = new Category("not yet", "ready");
+    static List<User> parse(XSSFWorkbook workbook, List<User> userList, List<Category> categories) {
         var userMap = new HashMap<UUID, User>();
         userList.forEach(user -> userMap.put(user.id(), user));
+        var categoryMap = new HashMap<String, Category>();
+        categories.forEach(category -> categoryMap.put(category.name(), category));
         var sheet = workbook.getSheet(SheetNames.Post.name());
         if (sheet == null) {
             throw new DocumentFormatException("no such sheet: " + SheetNames.Post.name());
@@ -94,15 +96,44 @@ interface PostsImporter {
             var dateTime = row.getCell(col++).getStringCellValue();
             var date = LocalDateTime.parse(dateTime, Formatters.dateFormatter);
             if (date == null) {
-                throw new DocumentFormatException("date must not be null");
+                throw new DocumentFormatException("date must not be null in row " + row);
             }
-            var post = new Post(user, title, body, published == "TRUE", date, defaultCategory);
+            var categoryName = row.getCell(col++).getStringCellValue();
+            var category = categoryMap.get(categoryName);
+            if (category == null) {
+                throw new DocumentFormatException("category not found in row " + row);
+            }
+            var post = new Post(user, title, body, published == "TRUE", date, category);
             
             user.posts().add(post);
             lineNumber++;
         }
         var users = new ArrayList<User>(userMap.size());
         users.addAll(userMap.values());
-        return new XlsxImportProcessor.Result.Success(users);
+        
+        return users;
     }
+}
+interface CategoryImporter {
+    static List<Category> parseCategories(XSSFWorkbook workbook) {
+        // todo: remove copy & paste code or ... do we really need to be better here as an LLM is?
+        var sheet = workbook.getSheet(SheetNames.Categories.name());
+        if (sheet == null) {
+            throw new DocumentFormatException("no such sheet: " + SheetNames.Categories.name());
+        }
+        var rowIterator = sheet.rowIterator();
+        if (!rowIterator.hasNext()) {
+            throw new DocumentFormatException("no header in " + SheetNames.Post.name());
+        }
+        rowIterator.next(); //TODO: check headers
+        var categories = new LinkedList<Category>();
+        while (rowIterator.hasNext()) {
+            var row = rowIterator.next();
+            var col = 0;
+            var name = row.getCell(col++).getStringCellValue();
+            var description = row.getCell(col++).getStringCellValue();
+            categories.add(new Category(name, description));    
+        }
+        return categories;
+    } 
 }

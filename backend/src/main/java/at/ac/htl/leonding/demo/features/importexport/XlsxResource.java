@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
 
+import at.ac.htl.leonding.demo.features.category.CategoryRepository;
 import at.ac.htl.leonding.demo.features.user.UserRepository;
 import at.ac.htl.leonding.demo.lib.Responses;
 import jakarta.annotation.security.PermitAll;
@@ -26,7 +27,7 @@ public class XlsxResource {
     @GET
     @Produces(MEDIA_TYPE)
     public Response export() {
-        return Responses.ok(XlsxExportProcessor.export(UserRepository.all())::accept)
+        return Responses.ok(XlsxExportProcessor.export(UserRepository.all(), CategoryRepository.all())::accept)
             .header("Content-Disposition", "attachment; filename=\"export.xlsx\"")
             .build();
     }
@@ -37,7 +38,8 @@ public class XlsxResource {
         return switch(XlsxImportProcessor.parse(inputStream)) {
             case XlsxImportProcessor.Result.Success ok -> {
                 UserRepository.add(ok.users());
-                log.log(Level.INFO, "{0} users imported", ok.users().size());
+                CategoryRepository.save(ok.categories());
+                log.log(Level.INFO, "{0} users and {1} categories imported", ok.users().size(), ok.categories().size());
                 yield Responses.ok();
             }
             case XlsxImportProcessor.Result.Failed withError -> Responses.badRequest(withError.exception());

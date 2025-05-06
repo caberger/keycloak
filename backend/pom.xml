@@ -86,6 +86,10 @@
       <artifactId>quarkus-oidc</artifactId>
     </dependency>
     <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-smallrye-openapi</artifactId>
+  </dependency>    
+    <dependency>
       <groupId>org.eclipse.store</groupId>
       <artifactId>storage-embedded</artifactId>
     </dependency>

@@ -4,7 +4,8 @@ import java.time.format.DateTimeFormatter;
 
 enum SheetNames {
     User,
-    Post
+    Post,
+    Categories
 }
 enum UserTableHeaders {
     id
@@ -14,9 +15,13 @@ enum PostTableHeaders {
     title,
     published,
     body,
-    createdAt
+    createdAt,
+    category
 }
-
+enum CategoryTableHeaders {
+    name,
+    description
+}
 class Formatters {
     static final DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 }

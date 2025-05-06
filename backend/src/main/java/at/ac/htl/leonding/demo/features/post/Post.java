@@ -5,12 +5,12 @@ import java.time.LocalDateTime;
 import at.ac.htl.leonding.demo.features.category.Category;
 import at.ac.htl.leonding.demo.features.user.User;
 
-/** A Post that is edited and published by a user */
+/** A Post that is edited and published by an author */
 public record Post(
     User author,
     String title,
     String body,
-    Boolean published,
+    boolean published,
     LocalDateTime createdAt,
     Category category
 ) {

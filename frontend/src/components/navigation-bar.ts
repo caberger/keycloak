@@ -53,7 +53,8 @@ class NavigationBarElement extends HTMLElement {
                 } else {
                     const error = await response.json()
                     console.error("upload failed", error)
-                    alert(`Upload failed: ${response.statusText}`)
+                    var trace = JSON.stringify(error)
+                    alert(`Upload failed: ${response.statusText}: ${trace}`)
                 }
                 loadPosts()
                 this.dialog.close()
