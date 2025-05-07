@@ -86,7 +86,7 @@ npm test
 
 ### startup: inital random data
 On startup records are created.
-You can adjust the number of records created at startup in by changing *store.create.number-of-test-records* property in [application.properties](./backend/src/main/resources/application.properties)
+You can adjust the number of records created at startup in by changing *store.create.number-of-test-records* property in [application.properties](./code/application-server/src/main/resources/application.properties)
 
 ### Import/Export
 

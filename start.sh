@@ -15,8 +15,7 @@ pushd ./code/frontend
     ./build.sh
 popd
 
-
-pushd ./code/application-server
+pushd ./code/backend/application-server
     echo "install backend dependencies..."
     mvn dependency:resolve
 popd
