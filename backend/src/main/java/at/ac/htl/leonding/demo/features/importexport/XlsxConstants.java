@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 enum SheetNames {
     User,
     Post,
-    Categories
+    Category
 }
 enum UserTableHeaders {
     id

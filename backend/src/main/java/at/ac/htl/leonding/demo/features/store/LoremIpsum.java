@@ -55,7 +55,7 @@ interface DatabaseConfig {
  */
 public interface LoremIpsum {
     static int NUMBER_OF_DUMMY_POSTS_PER_USER = 5;
-    
+
     private static Logger log() {
         return System.getLogger(LoremIpsum.class.getName());
     }
@@ -125,7 +125,7 @@ public interface LoremIpsum {
             });
             long diff = System.currentTimeMillis() - now;
             var userSize = initialRoot.users().size();
-            var recordCount = userSize * NUMBER_OF_DUMMY_POSTS_PER_USER + initialRoot.categories().size(); 
+            var recordCount = userSize * NUMBER_OF_DUMMY_POSTS_PER_USER + initialRoot.categories().size();
             log().log(Level.INFO, "Database inserts for {0} the users with a total of {1} posts took {2}s", userSize, recordCount, diff / 1000.0);
         }
     }

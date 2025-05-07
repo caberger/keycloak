@@ -113,7 +113,7 @@ class Exporter implements Consumer<OutputStream> {
     }
     SXSSFSheet exportCategories(Collection<Category> categories, SXSSFWorkbook workbook) {
         var row = 0;
-        var sheet = workbook.createSheet(SheetNames.Categories.name());
+        var sheet = workbook.createSheet(SheetNames.Category.name());
         var headerRow = sheet.createRow(row++);
         headerRow.setRowStyle(createHeaderStyle(workbook));
         addHeaders(workbook, headerRow, Stream.of(CategoryTableHeaders.values()).map(CategoryTableHeaders::name).toList());

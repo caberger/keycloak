@@ -2,6 +2,7 @@ package at.ac.htl.leonding.demo.features.post;
 
 import java.time.LocalDateTime;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 /** The Data Transfer Object for a Post that avoids recursion in REST responses.
@@ -9,11 +10,10 @@ import jakarta.validation.constraints.NotNull;
     public record PostDto(
         @NotNull
         String userId,
-        @NotNull
+        @NotBlank
         String title,
         String body,
         boolean published,
         LocalDateTime createdAt,
         String categoryName
     ) {}
-    

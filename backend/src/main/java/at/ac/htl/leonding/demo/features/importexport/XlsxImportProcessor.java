@@ -16,13 +16,12 @@ import at.ac.htl.leonding.demo.features.category.Category;
 import at.ac.htl.leonding.demo.features.post.Post;
 import at.ac.htl.leonding.demo.features.user.User;
 
-
 interface XlsxImportProcessor {
     sealed interface Result permits Result.Success, Result.Failed {
         record Success(List<User> users, List<Category> categories) implements Result {}
         record Failed(Exception exception) implements Result {}
     }
-    
+
     static Result parse(InputStream is) {
         Result result;
         try (var workbook = new XSSFWorkbook(is)) {
@@ -104,22 +103,22 @@ interface PostsImporter {
                 throw new DocumentFormatException("category not found in row " + row);
             }
             var post = new Post(user, title, body, published == "TRUE", date, category);
-            
+
             user.posts().add(post);
             lineNumber++;
         }
         var users = new ArrayList<User>(userMap.size());
         users.addAll(userMap.values());
-        
+
         return users;
     }
 }
 interface CategoryImporter {
     static List<Category> parseCategories(XSSFWorkbook workbook) {
         // todo: remove copy & paste code or ... do we really need to be better here as an LLM is?
-        var sheet = workbook.getSheet(SheetNames.Categories.name());
+        var sheet = workbook.getSheet(SheetNames.Category.name());
         if (sheet == null) {
-            throw new DocumentFormatException("no such sheet: " + SheetNames.Categories.name());
+            throw new DocumentFormatException("no such sheet: " + SheetNames.Category.name());
         }
         var rowIterator = sheet.rowIterator();
         if (!rowIterator.hasNext()) {
@@ -132,8 +131,8 @@ interface CategoryImporter {
             var col = 0;
             var name = row.getCell(col++).getStringCellValue();
             var description = row.getCell(col++).getStringCellValue();
-            categories.add(new Category(name, description));    
+            categories.add(new Category(name, description));
         }
         return categories;
-    } 
+    }
 }
