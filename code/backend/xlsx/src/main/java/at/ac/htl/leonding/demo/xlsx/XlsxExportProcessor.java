@@ -1,4 +1,4 @@
-package at.ac.htl.leonding.demo.features.importexport;
+package at.ac.htl.leonding.demo.xlsx;
 
 import java.io.OutputStream;
 import java.lang.System.Logger;
@@ -12,11 +12,12 @@ import org.apache.poi.xssf.streaming.SXSSFRow;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
+import at.ac.htl.leonding.demo.importexport.ExportProcessor;
 import at.ac.htl.leonding.demo.model.Category;
 import at.ac.htl.leonding.demo.model.User;
 
-interface XlsxExportProcessor {
-    static Consumer<OutputStream> export(Collection<User> users, Collection<Category> categories) {
+public class XlsxExportProcessor implements ExportProcessor {
+    public Consumer<OutputStream> export(Collection<User> users, Collection<Category> categories) {
         return new Exporter(users, categories);
     }
 }

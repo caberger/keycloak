@@ -6,6 +6,6 @@
     "yaml.schemas": {
         "https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json": "file:///home/aberger/Documents/school/keycloak/compose/backup-keycloak.yaml"
     },
-    "java.configuration.updateBuildConfiguration": "interactive",
+    "java.configuration.updateBuildConfiguration": "automatic",
     "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx2G -Xms100m -javaagent:\"/Users/aberger/.vscode/extensions/gabrielbb.vscode-lombok-1.0.1/server/lombok.jar\""
 }

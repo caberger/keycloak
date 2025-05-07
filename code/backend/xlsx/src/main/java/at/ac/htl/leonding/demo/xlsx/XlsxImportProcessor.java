@@ -1,4 +1,4 @@
-package at.ac.htl.leonding.demo.features.importexport;
+package at.ac.htl.leonding.demo.xlsx;
 
 import java.io.InputStream;
 import java.time.LocalDateTime;
@@ -7,17 +7,18 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
-
 import org.apache.poi.ooxml.POIXMLException;
 import org.apache.poi.util.DocumentFormatException;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import at.ac.htl.leonding.demo.importexport.ImportProcessor;
+import at.ac.htl.leonding.demo.importexport.ImportResult;
 import at.ac.htl.leonding.demo.model.Category;
 import at.ac.htl.leonding.demo.model.Post;
 import at.ac.htl.leonding.demo.model.User;
 
-interface XlsxImportProcessor {
-    static ImportResult parse(InputStream is) {
+class XlsxImportProcessor implements ImportProcessor {
+    public ImportResult parse(InputStream is) {
         ImportResult result;
         try (var workbook = new XSSFWorkbook(is)) {
             var categories = CategoryImporter.parseCategories(workbook);

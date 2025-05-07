@@ -8,16 +8,42 @@
   <groupId>at.ac.htl.leonding.demo</groupId>
   <artifactId>xlsx</artifactId>
   <version>0.4.0-SNAPSHOT</version>
+  <properties>
+      <apache.poi.version>5.4.1</apache.poi.version>
+  </properties>
   <parent>
       <groupId>at.ac.htl.leonding.demo</groupId>
       <artifactId>backend</artifactId>
       <version>0.4.0-SNAPSHOT</version>
   </parent>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.apache.poi</groupId>
+        <artifactId>poi</artifactId>
+        <version>${apache.poi.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.poi</groupId>
+        <artifactId>poi-ooxml</artifactId>
+        <version>${apache.poi.version}</version>
+      </dependency>
+      </dependencies>
+  </dependencyManagement>
   <dependencies>
     <dependency>
         <groupId>at.ac.htl.leonding.demo</groupId>
         <artifactId>model</artifactId>
          <version>0.4.0-SNAPSHOT</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi-ooxml</artifactId>
+    </dependency>
+
   </dependencies>
 </project>
