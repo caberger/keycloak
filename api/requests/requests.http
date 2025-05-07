@@ -6,7 +6,7 @@ GET {{BASE}}/users/posts
 Authorization: Bearer {{login.access_token}}
 Accept: application/json
 ###
-# @name addpost
+# @name addpost-without-userid
 PUT {{BASE}}/users/posts
 Authorization: Bearer {{login.access_token}}
 Content-Type: application/json
@@ -17,7 +17,7 @@ Content-Type: application/json
     "published": true
 }
 
-?? status == 201
+?? status == 400
 ###
 GET {{BASE}}/users/posts
 Authorization: Bearer {{login.access_token}}
@@ -27,6 +27,8 @@ Accept: text/csv
 GET {{BASE}}/users/i
 Authorization: Bearer {{login.access_token}}
 Accept: application/json
+
+?? status == 200
 ###
 # @name import
 POST {{BASE}}/portation/xlsx

@@ -1,6 +1,8 @@
 package at.ac.htl.leonding.demo.lib;
 
 import java.net.URI;
+import java.util.Optional;
+
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.ResponseBuilder;
 import jakarta.ws.rs.core.StreamingOutput;
@@ -33,5 +35,8 @@ public interface Responses {
     }
     static Response badRequest(Exception e) {
         return Response.status(Response.Status.BAD_REQUEST).entity(new ExceptionInfo(e.getMessage())).build();
+    }
+    static <T> Response ok(Optional<T> mayBe) {
+        return mayBe.isPresent()  ? Responses.ok(mayBe.get()) : Responses.notFound();
     }
 }

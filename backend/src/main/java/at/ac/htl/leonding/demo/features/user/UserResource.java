@@ -4,11 +4,12 @@ import java.util.UUID;
 
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
-import at.ac.htl.leonding.demo.features.post.Post;
+import at.ac.htl.leonding.demo.features.post.PostDto;
 import at.ac.htl.leonding.demo.features.post.PostMapper;
 import at.ac.htl.leonding.demo.lib.Responses;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PUT;
@@ -44,14 +45,14 @@ public class UserResource {
     @PUT
     @Path("/posts")
     @RolesAllowed({"editor", "customer"})
-    public Response create(Post post) {
+    public Response create(@Valid PostDto post) {
         var user = user();
         return user.posts().stream()
             .filter(existingPost -> existingPost.title().equalsIgnoreCase(post.title()))
             .findAny()
             .map(Responses::exists)
             .orElseGet(() -> {
-                user.posts().add(post);
+                user.posts().add(PostMapper.fromResource(post));
                 UserRepository.update(user);
                 return Responses.created(UriBuilder.fromResource(UserResource.class).build());
             })

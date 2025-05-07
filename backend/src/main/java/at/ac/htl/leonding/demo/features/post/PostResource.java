@@ -2,7 +2,6 @@ package at.ac.htl.leonding.demo.features.post;
 
 import java.util.List;
 
-import at.ac.htl.leonding.demo.features.post.PostMapper.PostDto;
 import at.ac.htl.leonding.demo.lib.CsvMessageBodyProvider;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;

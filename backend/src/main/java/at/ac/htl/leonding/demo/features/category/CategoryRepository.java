@@ -2,6 +2,7 @@ package at.ac.htl.leonding.demo.features.category;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import at.ac.htl.leonding.demo.features.store.Database;
 import at.ac.htl.leonding.demo.lib.Store;
@@ -17,5 +18,8 @@ public interface CategoryRepository {
         Store.set(store -> {
             store.store(root);
         });
+    }
+    static Optional<Category> find(String title) {
+        return Optional.ofNullable(Database.root().categories().get(title));
     }
 }
