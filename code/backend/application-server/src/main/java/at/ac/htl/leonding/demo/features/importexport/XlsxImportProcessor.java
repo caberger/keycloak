@@ -17,20 +17,15 @@ import at.ac.htl.leonding.demo.model.Post;
 import at.ac.htl.leonding.demo.model.User;
 
 interface XlsxImportProcessor {
-    sealed interface Result permits Result.Success, Result.Failed {
-        record Success(List<User> users, List<Category> categories) implements Result {}
-        record Failed(Exception exception) implements Result {}
-    }
-
-    static Result parse(InputStream is) {
-        Result result;
+    static ImportResult parse(InputStream is) {
+        ImportResult result;
         try (var workbook = new XSSFWorkbook(is)) {
             var categories = CategoryImporter.parseCategories(workbook);
             var users = UserImporter.parseUsers(workbook);
             PostsImporter.parse(workbook, users, categories);
-            result = new Result.Success(users, categories);
+            result = new ImportResult.Success(users, categories);
         } catch (Exception e) {
-            result = new XlsxImportProcessor.Result.Failed(e);
+            result = new ImportResult.Failed(e);
         }
         return result;
     }

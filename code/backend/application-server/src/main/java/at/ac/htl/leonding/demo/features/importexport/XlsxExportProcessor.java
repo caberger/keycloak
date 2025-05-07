@@ -4,7 +4,6 @@ import java.io.OutputStream;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
 import java.util.Collection;
-import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -15,7 +14,6 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
 import at.ac.htl.leonding.demo.model.Category;
 import at.ac.htl.leonding.demo.model.User;
-
 
 interface XlsxExportProcessor {
     static Consumer<OutputStream> export(Collection<User> users, Collection<Category> categories) {

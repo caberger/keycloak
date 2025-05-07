@@ -8,6 +8,7 @@
   <groupId>at.ac.htl.leonding.demo</groupId>
   <artifactId>backend</artifactId>
   <version>0.4.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
   <properties>
     <compiler-plugin.version>3.13.0</compiler-plugin.version>
     <maven.compiler.release>21</maven.compiler.release>
@@ -32,60 +33,17 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
-      <dependency>
-        <groupId>org.eclipse.store</groupId>
-        <artifactId>storage-embedded</artifactId>
-        <version>${eclipse.store.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.eclipse.store</groupId>
-        <artifactId>storage-restservice-sparkjava</artifactId>
-        <version>${eclipse.store.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.fasterxml.jackson.core</groupId>
-        <artifactId>jackson-core</artifactId>
-        <version>${jackson.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.fasterxml.jackson.dataformat</groupId>
-        <artifactId>jackson-dataformat-csv</artifactId>
-        <version>${jackson.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.poi</groupId>
-        <artifactId>poi</artifactId>
-        <version>${apache.poi.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.poi</groupId>
-        <artifactId>poi-ooxml</artifactId>
-        <version>${apache.poi.version}</version>
-      </dependency>
-      </dependencies>
+    </dependencies>
   </dependencyManagement>
   <dependencies>
   </dependencies>
   <modules>
         <module>application-server</module>
+        <module>model</module>
+        <module>xlsx</module>
   </modules>
   <build>
     <plugins>
-      <plugin>
-        <groupId>${quarkus.platform.group-id}</groupId>
-        <artifactId>quarkus-maven-plugin</artifactId>
-        <version>${quarkus.platform.version}</version>
-        <extensions>true</extensions>
-        <executions>
-          <execution>
-            <goals>
-              <goal>build</goal>
-              <goal>generate-code</goal>
-              <goal>generate-code-tests</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${surefire-plugin.version}</version>
@@ -143,6 +101,16 @@
                         <goal>jar</goal>
                     </goals>
                 </execution>
+                <execution>
+                  <id>aggregate</id>
+                  <goals>
+                    <goal>aggregate</goal>
+                  </goals>
+                  <phase>site</phase>
+                  <configuration>
+                    <!-- Specific configuration for the aggregate report -->
+                  </configuration>
+                </execution>
             </executions>
             <configuration>
                 <doclint>all,-missing</doclint>
@@ -153,24 +121,31 @@
                     <version>2.2.1</version>
                 </docletArtifact>
                 <additionalOptions>
-                    <!--<additionalOption>...</additionalOption>-->
+                    <option>--show-module-contents all</option>
                 </additionalOptions>
             </configuration>
       </plugin>
     </plugins>
+    <pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>${quarkus.platform.group-id}</groupId>
+                <artifactId>quarkus-maven-plugin</artifactId>
+                <version>${quarkus.platform.version}</version>
+            </plugin>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${compiler-plugin.version}</version>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${surefire-plugin.version}</version>
+            </plugin>
+        </plugins>
+    </pluginManagement>
   </build>
-  <profiles>
-    <profile>
-      <id>native</id>
-      <activation>
-        <property>
-          <name>native</name>
-        </property>
-      </activation>
-      <properties>
-        <skipITs>false</skipITs>
-        <quarkus.package.type>native</quarkus.package.type>
-      </properties>
-    </profile>
-  </profiles>
+  <reporting>
+    <plugins>
+    </plugins>
+  </reporting>
 </project>

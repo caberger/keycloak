@@ -27,7 +27,7 @@ popd
 
 echo "==="
 echo "= docker compose started."
-echo "= 1.) open a new terminal in $PWD/code/application-server and run: → ${bold}./start.sh${normal}"
+echo "= 1.) open a new terminal in $PWD/code/backend/application-server and run: → ${bold}./start.sh${normal}"
 echo "= you can start the application at http://localhost:8080"
 echo "= 2.) for frontend development on http://localhost:4200 you can open a new terminal in $PWD/code/frontend and run: → ${bold}npm start${normal}"
 echo "==="

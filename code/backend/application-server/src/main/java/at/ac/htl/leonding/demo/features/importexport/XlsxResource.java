@@ -36,13 +36,13 @@ public class XlsxResource {
     @POST
     public Response parse(InputStream inputStream) {
         return switch(XlsxImportProcessor.parse(inputStream)) {
-            case XlsxImportProcessor.Result.Success ok -> {
+            case ImportResult.Success ok -> {
                 UserRepository.add(ok.users());
                 CategoryRepository.save(ok.categories());
                 log.log(Level.INFO, "{0} users and {1} categories imported", ok.users().size(), ok.categories().size());
                 yield Responses.ok();
             }
-            case XlsxImportProcessor.Result.Failed withError -> Responses.badRequest(withError.exception());
+            case ImportResult.Failed withError -> Responses.badRequest(withError.exception());
         };
     }
 }
