@@ -44,9 +44,10 @@ interface ImportExportProvider {
 @Path("/portation/{type}")
 @PermitAll // only for debugging, remove this!
 public class ImportExportResource {
+    static final String MEDIA_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+    
     Logger log = Log.log(ImportExportResource.class);
 
-    public static final String MEDIA_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     @GET
     @Produces(MEDIA_TYPE)
     public Response export(@PathParam("type") String type) {
