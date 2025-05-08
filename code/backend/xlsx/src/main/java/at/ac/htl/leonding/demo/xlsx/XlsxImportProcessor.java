@@ -17,7 +17,7 @@ import at.ac.htl.leonding.demo.model.Category;
 import at.ac.htl.leonding.demo.model.Post;
 import at.ac.htl.leonding.demo.model.User;
 
-class XlsxImportProcessor implements ImportProcessor {
+public class XlsxImportProcessor implements ImportProcessor, XlsxProcessor {
     public ImportResult parse(InputStream is) {
         ImportResult result;
         try (var workbook = new XSSFWorkbook(is)) {

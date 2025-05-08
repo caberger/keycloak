@@ -1,14 +1,16 @@
 # Securing a Web-App using Keycloak
 
-This example shows how to secure a simple Web-Application using a REST - API that is protected with [Json Web Tokens](https://jwt.io/) using [keycloak](https://www.keycloak.org/).
+This example shows how to secure a simple Web- database application using a REST - API that is protected with [Json Web Tokens](https://jwt.io/) using [keycloak](https://www.keycloak.org/).
 
 ## Nodbms
 
-Let me site the Eclipse Store Website:
+Let me cite the Eclipse Store Website:
+
+In this project we do not use outdated DBMS technology that was designed for computers with a that lived 50 years ago. We use a storage that conforms to the [Single-responsibility principle](https://en.wikipedia.org/wiki/Single-responsibility_principle).
+
 
 *A DataBase Management System is something of a server application platform of an "old kind" on top of its data store functionality: A standalone process with user management, connection management, session handling, often even with a programming language of its own, a querying interface (SQL), etc. Today, all of those server application features are already and much better handled by dedicated server applications (the "new kind"), implemented in a modern language like Java. They have their built-in user, connection and session management, the querying interface to the outside world are typically web services instead of SQL, etc. But those modern server applications still lack one important thing: an easy to use and technically efficient way to store and restore their application’s data. So a "new kind" server often uses an "old kind" server just to do the data storing. This comes at the price of catching all the overhead and problems of redundant user, connection and session management AND the outdated concepts and limitations of the old querying interface (SQL).*
 
-So, in this project we do not use outdated DBMS technology that was designed for computers that lived 50 years ago. We use a storage that conforms to the [Single-responsibility principle](https://en.wikipedia.org/wiki/Single-responsibility_principle).
 
 ## Frontend
 

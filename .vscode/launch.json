@@ -18,6 +18,14 @@
             "vmArgs": [
                 "--add-exports", "java.base/jdk.internal.misc=ALL-UNNAMED"
             ]
-        },        
+        },
+        {
+            "type": "java",
+            "name": "attach(backend)",
+            "projectName": "backend",
+            "request": "attach",
+            "hostName": "localhost",
+            "port": 5005
+        },                
     ]
 }

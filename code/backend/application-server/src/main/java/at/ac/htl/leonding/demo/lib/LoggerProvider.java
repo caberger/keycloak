@@ -1,4 +1,4 @@
-package at.ac.htl.leonding.demo.features.logging;
+package at.ac.htl.leonding.demo.lib;
 
 import java.lang.System.Logger;
 

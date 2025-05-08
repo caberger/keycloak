@@ -16,7 +16,7 @@ import at.ac.htl.leonding.demo.importexport.ExportProcessor;
 import at.ac.htl.leonding.demo.model.Category;
 import at.ac.htl.leonding.demo.model.User;
 
-public class XlsxExportProcessor implements ExportProcessor {
+public class XlsxExportProcessor implements ExportProcessor, XlsxProcessor  {
     public Consumer<OutputStream> export(Collection<User> users, Collection<Category> categories) {
         return new Exporter(users, categories);
     }

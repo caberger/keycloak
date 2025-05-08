@@ -2,6 +2,10 @@ package at.ac.htl.leonding.demo.xlsx;
 
 import java.time.format.DateTimeFormatter;
 
+enum Type {
+    xlsx
+}
+
 enum SheetNames {
     User,
     Post,
