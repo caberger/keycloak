@@ -1,0 +1,7 @@
+
+GET {{BASE}}/users
+Accept: application/json
+###
+GET {{BASE}}/hello
+Accept: application/json
+###
