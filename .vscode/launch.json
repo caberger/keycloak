@@ -14,7 +14,7 @@
             "request": "launch",
             "mainClass": "at.ac.htl.leonding.demo.main.Main",
             "projectName": "backend",
-            "cwd": "${workspaceFolder}/backend",
+            "cwd": "${workspaceFolder}/code/backend/application-server",
             "vmArgs": [
                 "--add-exports", "java.base/jdk.internal.misc=ALL-UNNAMED"
             ]
@@ -26,6 +26,14 @@
             "request": "attach",
             "hostName": "localhost",
             "port": 5005
-        },                
+        },
+        {
+            "type": "java",
+            "name": "restlet",
+            "request": "launch",
+            "mainClass": "at.aberger.demo.Main",
+            "projectName": "server",
+            "cwd": "${workspaceFolder}/code/backend/server"
+        }                       
     ]
 }
