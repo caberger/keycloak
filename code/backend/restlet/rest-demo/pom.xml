@@ -16,7 +16,13 @@
     <restlet-version>2.5.1</restlet-version>
     <main-class-name>at.aberger.demo.Main</main-class-name>
   </properties>
-
+  <repositories>
+      <repository>
+      <id>restlet</id>
+      <name>restlet repository</name>
+      <url>https://maven.restlet.talend.com/</url>
+    </repository>
+  </repositories>
   <dependencies>
     <dependency>
       <groupId>org.restlet</groupId>
@@ -28,12 +34,7 @@
       <artifactId>org.restlet.ext.jackson</artifactId>
       <version>${restlet-version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.restlet</groupId>
-      <artifactId>org.restlet.ext.jackson</artifactId>
-      <version>${restlet-version}</version>
-    </dependency>    
-  </dependencies>
+ </dependencies>
 
   <build>
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->

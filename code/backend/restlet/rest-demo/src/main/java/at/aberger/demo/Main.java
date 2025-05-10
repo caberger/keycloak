@@ -8,8 +8,9 @@ import at.aberger.demo.boot.App;
 import at.aberger.demo.features.hello.HelloResource;
 import at.aberger.demo.features.user.UserResource;
 
-interface Resources {
+interface Configuration {
     static final int PORT = 8080;
+    static final String API_ROOT = "/api";
     static Map<String, Class<? extends ServerResource>> resources = Map.of(
         "/users",UserResource.class,
         "/hello", HelloResource.class
@@ -18,6 +19,10 @@ interface Resources {
 
 public class Main {
     public static void main(String[] args) throws Exception {
-		App.createApp(Resources.PORT, Resources.resources).start();
+		App.createApp(
+                Configuration.PORT,
+                Configuration.API_ROOT,
+                Configuration.resources
+            ).start();
 	}
 }
